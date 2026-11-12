@@ -1,0 +1,672 @@
+[
+  {
+    "draw_date": "2026-11-12",
+    "actual_numbers": [
+      "02",
+      "09",
+      "30",
+      "37",
+      "38"
+    ],
+    "predicted_recommended": [
+      "32",
+      "02",
+      "34",
+      "30",
+      "07",
+      "23",
+      "06"
+    ],
+    "predicted_solo": [
+      "32",
+      "02"
+    ],
+    "predicted_tudigong": "20",
+    "predicted_flames": [],
+    "hit_numbers": [
+      "02",
+      "30"
+    ],
+    "hit_count": 2,
+    "hit_categories": [
+      "獨支(02)",
+      "推薦7碼(02,30)"
+    ],
+    "tudigong_hit": false
+  },
+  {
+    "draw_date": "2026-11-11",
+    "actual_numbers": [
+      "14",
+      "21",
+      "29",
+      "30",
+      "32"
+    ],
+    "predicted_recommended": [
+      "30",
+      "23",
+      "32",
+      "33",
+      "12",
+      "13",
+      "07"
+    ],
+    "predicted_solo": [
+      "30",
+      "33"
+    ],
+    "predicted_tudigong": "16",
+    "predicted_flames": [],
+    "hit_numbers": [
+      "30",
+      "32"
+    ],
+    "hit_count": 2,
+    "hit_categories": [
+      "獨支(30)",
+      "推薦7碼(30,32)"
+    ],
+    "tudigong_hit": false
+  },
+  {
+    "draw_date": "2026-11-10",
+    "actual_numbers": [
+      "01",
+      "19",
+      "24",
+      "29",
+      "34"
+    ],
+    "predicted_recommended": [
+      "07",
+      "32",
+      "23",
+      "30",
+      "17",
+      "34",
+      "20"
+    ],
+    "predicted_solo": [
+      "07",
+      "20"
+    ],
+    "predicted_tudigong": "16",
+    "predicted_flames": [],
+    "hit_numbers": [
+      "34"
+    ],
+    "hit_count": 1,
+    "hit_categories": [
+      "推薦7碼(34)"
+    ],
+    "tudigong_hit": false
+  },
+  {
+    "draw_date": "2026-11-09",
+    "actual_numbers": [
+      "07",
+      "09",
+      "28",
+      "30",
+      "33"
+    ],
+    "predicted_recommended": [
+      "30",
+      "23",
+      "14",
+      "07",
+      "32",
+      "05",
+      "16"
+    ],
+    "predicted_solo": [
+      "30",
+      "32"
+    ],
+    "predicted_tudigong": "15",
+    "predicted_flames": [],
+    "hit_numbers": [
+      "07",
+      "30"
+    ],
+    "hit_count": 2,
+    "hit_categories": [
+      "獨支(30)",
+      "推薦7碼(30,07)"
+    ],
+    "tudigong_hit": false
+  },
+  {
+    "draw_date": "2026-11-07",
+    "actual_numbers": [
+      "10",
+      "21",
+      "24",
+      "32",
+      "34"
+    ],
+    "predicted_recommended": [
+      "23",
+      "30",
+      "19",
+      "32",
+      "12",
+      "14",
+      "07"
+    ],
+    "predicted_solo": [
+      "23",
+      "14"
+    ],
+    "predicted_tudigong": "09",
+    "predicted_flames": [],
+    "hit_numbers": [
+      "32"
+    ],
+    "hit_count": 1,
+    "hit_categories": [
+      "推薦7碼(32)"
+    ],
+    "tudigong_hit": false
+  },
+  {
+    "draw_date": "2026-11-06",
+    "actual_numbers": [
+      "14",
+      "20",
+      "23",
+      "26",
+      "29"
+    ],
+    "predicted_recommended": [
+      "08",
+      "07",
+      "34",
+      "32",
+      "14",
+      "19",
+      "30"
+    ],
+    "predicted_solo": [
+      "32",
+      "08"
+    ],
+    "predicted_tudigong": "04",
+    "predicted_flames": [],
+    "hit_numbers": [
+      "14"
+    ],
+    "hit_count": 1,
+    "hit_categories": [
+      "推薦7碼(14)"
+    ],
+    "tudigong_hit": false
+  },
+  {
+    "draw_date": "2026-11-05",
+    "actual_numbers": [
+      "20",
+      "28",
+      "32",
+      "36",
+      "37"
+    ],
+    "predicted_recommended": [
+      "08",
+      "23",
+      "12",
+      "32",
+      "05",
+      "16",
+      "30"
+    ],
+    "predicted_solo": [
+      "08",
+      "32"
+    ],
+    "predicted_tudigong": "33",
+    "predicted_flames": [],
+    "hit_numbers": [
+      "32"
+    ],
+    "hit_count": 1,
+    "hit_categories": [
+      "獨支(32)",
+      "推薦7碼(32)"
+    ],
+    "tudigong_hit": false
+  },
+  {
+    "draw_date": "2026-11-04",
+    "actual_numbers": [
+      "02",
+      "08",
+      "18",
+      "33",
+      "39"
+    ],
+    "predicted_recommended": [
+      "32",
+      "17",
+      "05",
+      "12",
+      "30",
+      "19",
+      "08"
+    ],
+    "predicted_solo": [
+      "32",
+      "05"
+    ],
+    "predicted_tudigong": "31",
+    "predicted_flames": [],
+    "hit_numbers": [
+      "08"
+    ],
+    "hit_count": 1,
+    "hit_categories": [
+      "推薦7碼(08)"
+    ],
+    "tudigong_hit": false
+  },
+  {
+    "draw_date": "2026-11-03",
+    "actual_numbers": [
+      "05",
+      "10",
+      "30",
+      "32",
+      "34"
+    ],
+    "predicted_recommended": [
+      "19",
+      "23",
+      "30",
+      "12",
+      "35",
+      "28",
+      "13"
+    ],
+    "predicted_solo": [
+      "35",
+      "29"
+    ],
+    "predicted_tudigong": "04",
+    "predicted_flames": [],
+    "hit_numbers": [
+      "30"
+    ],
+    "hit_count": 1,
+    "hit_categories": [
+      "推薦7碼(30)"
+    ],
+    "tudigong_hit": false
+  },
+  {
+    "draw_date": "2026-11-02",
+    "actual_numbers": [
+      "29",
+      "31",
+      "33",
+      "35",
+      "38"
+    ],
+    "predicted_recommended": [
+      "12",
+      "19",
+      "30",
+      "08",
+      "29",
+      "04",
+      "23"
+    ],
+    "predicted_solo": [
+      "12",
+      "19"
+    ],
+    "predicted_tudigong": "35",
+    "predicted_flames": [],
+    "hit_numbers": [
+      "29",
+      "35"
+    ],
+    "hit_count": 2,
+    "hit_categories": [
+      "土地公牌",
+      "推薦7碼(29)"
+    ],
+    "tudigong_hit": true
+  },
+  {
+    "draw_date": "2026-10-31",
+    "actual_numbers": [
+      "02",
+      "05",
+      "17",
+      "28",
+      "37"
+    ],
+    "predicted_recommended": [
+      "19",
+      "12",
+      "13",
+      "30",
+      "06",
+      "08",
+      "25"
+    ],
+    "predicted_solo": [
+      "19",
+      "12"
+    ],
+    "predicted_tudigong": "04",
+    "predicted_flames": [],
+    "hit_numbers": [],
+    "hit_count": 0,
+    "hit_categories": [
+      "未命中"
+    ],
+    "tudigong_hit": false
+  },
+  {
+    "draw_date": "2026-10-30",
+    "actual_numbers": [
+      "09",
+      "11",
+      "12",
+      "31",
+      "37"
+    ],
+    "predicted_recommended": [
+      "19",
+      "12",
+      "04",
+      "14",
+      "30",
+      "13",
+      "06"
+    ],
+    "predicted_solo": [
+      "14",
+      "19"
+    ],
+    "predicted_tudigong": "32",
+    "predicted_flames": [],
+    "hit_numbers": [
+      "12"
+    ],
+    "hit_count": 1,
+    "hit_categories": [
+      "推薦7碼(12)"
+    ],
+    "tudigong_hit": false
+  },
+  {
+    "draw_date": "2026-10-29",
+    "actual_numbers": [
+      "02",
+      "11",
+      "14",
+      "21",
+      "22"
+    ],
+    "predicted_recommended": [
+      "06",
+      "12",
+      "30",
+      "13",
+      "19",
+      "08",
+      "29"
+    ],
+    "predicted_solo": [
+      "35",
+      "06"
+    ],
+    "predicted_tudigong": "24",
+    "predicted_flames": [],
+    "hit_numbers": [],
+    "hit_count": 0,
+    "hit_categories": [
+      "未命中"
+    ],
+    "tudigong_hit": false
+  },
+  {
+    "draw_date": "2026-10-28",
+    "actual_numbers": [
+      "06",
+      "11",
+      "13",
+      "19",
+      "35"
+    ],
+    "predicted_recommended": [
+      "30",
+      "19",
+      "13",
+      "08",
+      "35",
+      "06",
+      "25"
+    ],
+    "predicted_solo": [
+      "28",
+      "19"
+    ],
+    "predicted_tudigong": "18",
+    "predicted_flames": [],
+    "hit_numbers": [
+      "06",
+      "13",
+      "19",
+      "35"
+    ],
+    "hit_count": 4,
+    "hit_categories": [
+      "獨支(19)",
+      "推薦7碼(19,13,35,06)"
+    ],
+    "tudigong_hit": false
+  },
+  {
+    "draw_date": "2026-10-27",
+    "actual_numbers": [
+      "02",
+      "06",
+      "15",
+      "27",
+      "28"
+    ],
+    "predicted_recommended": [
+      "30",
+      "08",
+      "12",
+      "23",
+      "19",
+      "06",
+      "35"
+    ],
+    "predicted_solo": [
+      "30",
+      "35"
+    ],
+    "predicted_tudigong": "15",
+    "predicted_flames": [],
+    "hit_numbers": [
+      "06",
+      "15"
+    ],
+    "hit_count": 2,
+    "hit_categories": [
+      "土地公牌",
+      "推薦7碼(06)"
+    ],
+    "tudigong_hit": true
+  },
+  {
+    "draw_date": "2026-10-26",
+    "actual_numbers": [
+      "13",
+      "15",
+      "19",
+      "28",
+      "35"
+    ],
+    "predicted_recommended": [
+      "30",
+      "07",
+      "35",
+      "25",
+      "34",
+      "23",
+      "06"
+    ],
+    "predicted_solo": [
+      "30",
+      "35"
+    ],
+    "predicted_tudigong": "18",
+    "predicted_flames": [],
+    "hit_numbers": [
+      "35"
+    ],
+    "hit_count": 1,
+    "hit_categories": [
+      "獨支(35)",
+      "推薦7碼(35)"
+    ],
+    "tudigong_hit": false
+  },
+  {
+    "draw_date": "2026-10-24",
+    "actual_numbers": [
+      "01",
+      "17",
+      "24",
+      "27",
+      "35"
+    ],
+    "predicted_recommended": [
+      "30",
+      "19",
+      "07",
+      "16",
+      "32",
+      "06",
+      "25"
+    ],
+    "predicted_solo": [
+      "07",
+      "14"
+    ],
+    "predicted_tudigong": "02",
+    "predicted_flames": [],
+    "hit_numbers": [],
+    "hit_count": 0,
+    "hit_categories": [
+      "未命中"
+    ],
+    "tudigong_hit": false
+  },
+  {
+    "draw_date": "2026-10-23",
+    "actual_numbers": [
+      "03",
+      "07",
+      "14",
+      "17",
+      "27"
+    ],
+    "predicted_recommended": [
+      "35",
+      "23",
+      "08",
+      "32",
+      "19",
+      "34",
+      "06"
+    ],
+    "predicted_solo": [
+      "23",
+      "08"
+    ],
+    "predicted_tudigong": "09",
+    "predicted_flames": [],
+    "hit_numbers": [],
+    "hit_count": 0,
+    "hit_categories": [
+      "未命中"
+    ],
+    "tudigong_hit": false
+  },
+  {
+    "draw_date": "2026-10-22",
+    "actual_numbers": [
+      "03",
+      "08",
+      "14",
+      "23",
+      "28"
+    ],
+    "predicted_recommended": [
+      "02",
+      "23",
+      "34",
+      "35",
+      "30",
+      "13",
+      "22"
+    ],
+    "predicted_solo": [
+      "08",
+      "02"
+    ],
+    "predicted_tudigong": "09",
+    "predicted_flames": [],
+    "hit_numbers": [
+      "08",
+      "23"
+    ],
+    "hit_count": 2,
+    "hit_categories": [
+      "獨支(08)",
+      "推薦7碼(23)"
+    ],
+    "tudigong_hit": false
+  },
+  {
+    "draw_date": "2026-10-21",
+    "actual_numbers": [
+      "04",
+      "08",
+      "15",
+      "18",
+      "28"
+    ],
+    "predicted_recommended": [
+      "34",
+      "06",
+      "13",
+      "19",
+      "23",
+      "30",
+      "04"
+    ],
+    "predicted_solo": [
+      "12",
+      "20"
+    ],
+    "predicted_tudigong": "09",
+    "predicted_flames": [],
+    "hit_numbers": [
+      "04"
+    ],
+    "hit_count": 1,
+    "hit_categories": [
+      "推薦7碼(04)"
+    ],
+    "tudigong_hit": false
+  }
+]
