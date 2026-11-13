@@ -78,6 +78,20 @@
       line-height: 1;
       filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
     }
+    .ball-flame-ring {
+      box-shadow: 0 0 10px 2px rgba(249, 115, 22, 0.85), 0 0 20px 5px rgba(239, 68, 68, 0.55);
+      border: 2px solid #fb923c;
+      animation: flamePulse 1.8s infinite ease-in-out;
+    }
+    .flame-mini-badge {
+      position: absolute;
+      top: -7px;
+      right: -6px;
+      font-size: 0.78rem;
+      line-height: 1;
+      filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.85));
+      pointer-events: none;
+    }
     /* 強制手機版預覽模式 */
     body.force-mobile #app-main {
       max-width: 430px;
@@ -94,7 +108,32 @@
     body.force-mobile #graded-mobile-cards { display: flex !important; }
   </style>
 </head>
-<body class="min-h-screen antialiased ">
+<body class="min-h-screen antialiased force-mobile">
+  <!-- 進站密碼鎖 (方案 A) -->
+  <div id="auth-gate" class="fixed inset-0 z-[100] flex items-center justify-center bg-[#05070b] px-4">
+    <div class="card-dark w-full max-w-sm rounded-2xl p-6 space-y-5 border-amber-500/40">
+      <div class="flex items-center gap-3">
+        <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 to-orange-600 text-lg font-black text-slate-950 shadow">539</div>
+        <div>
+          <h2 class="text-base font-extrabold text-white">今彩539 私人系統</h2>
+          <p class="text-xs text-slate-400">請輸入進站密碼以繼續使用</p>
+        </div>
+      </div>
+      <form id="auth-form" class="space-y-3.5">
+        <div>
+          <label for="auth-password" class="block text-xs font-bold text-slate-300 mb-1.5">進站密碼</label>
+          <input id="auth-password" type="password" autocomplete="current-password" placeholder="請輸入密碼" class="w-full rounded-xl border border-slate-700 bg-slate-900 px-3.5 py-2.5 text-sm font-bold text-white focus:border-amber-400 focus:outline-none" />
+        </div>
+        <label class="flex items-center gap-2 text-xs text-slate-300 cursor-pointer select-none">
+          <input id="auth-remember" type="checkbox" checked class="h-4 w-4 rounded border-slate-600 bg-slate-800 accent-amber-400" />
+          <span>記住此裝置（下次免重新輸入）</span>
+        </label>
+        <p id="auth-error" class="hidden text-xs font-bold text-rose-400">密碼錯誤，請再試一次。</p>
+        <button type="submit" class="w-full rounded-xl bg-amber-400 py-2.5 text-sm font-black text-slate-950 hover:bg-amber-300 transition shadow">解鎖進入</button>
+      </form>
+    </div>
+  </div>
+
   <div id="toast" class="fixed top-16 right-4 z-50 hidden rounded-xl border border-amber-400/40 bg-slate-900 px-4 py-3 text-sm font-bold text-amber-200 shadow-2xl"></div>
 
   <!-- 頂部導覽列 -->
@@ -350,9 +389,45 @@
     <!-- 分頁 5：114年至今歷史總表（粗分隔線＋高對比交錯底色） -->
     <section id="tab-history" class="tab-panel hidden">
       <div class="card-dark rounded-2xl p-4 sm:p-5">
-        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
-          <h2 class="text-base font-extrabold text-white">114 年至今歷史開獎紀錄（粗框分隔＋交錯底色）</h2>
-          <input id="history-filter" type="text" placeholder="搜尋日期或號碼（例：2026-11 或 30）" class="w-full sm:w-64 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-xs text-white" />
+        <div class="flex flex-col gap-3 mb-4">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <h2 class="text-base font-extrabold text-white">114 年至今歷史開獎紀錄（粗框分隔＋交錯底色）</h2>
+            <span id="history-match-count" class="rounded-lg bg-slate-800 border border-slate-700 px-2.5 py-1 text-xs font-bold text-amber-300">-</span>
+          </div>
+          <div class="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2">
+            <select id="history-year" aria-label="篩選年份" class="rounded-lg border border-slate-700 bg-slate-800 px-2.5 py-2 text-xs font-bold text-white">
+              <option value="">全部年份</option>
+            </select>
+            <select id="history-month" aria-label="篩選月份" class="rounded-lg border border-slate-700 bg-slate-800 px-2.5 py-2 text-xs font-bold text-white">
+              <option value="">全部月份</option>
+              <option value="01">01 月</option>
+              <option value="02">02 月</option>
+              <option value="03">03 月</option>
+              <option value="04">04 月</option>
+              <option value="05">05 月</option>
+              <option value="06">06 月</option>
+              <option value="07">07 月</option>
+              <option value="08">08 月</option>
+              <option value="09">09 月</option>
+              <option value="10">10 月</option>
+              <option value="11">11 月</option>
+              <option value="12">12 月</option>
+            </select>
+            <select id="history-weekday" aria-label="篩選星期" class="rounded-lg border border-slate-700 bg-slate-800 px-2.5 py-2 text-xs font-bold text-white">
+              <option value="">全部星期</option>
+              <option value="1">星期（一）</option>
+              <option value="2">星期（二）</option>
+              <option value="3">星期（三）</option>
+              <option value="4">星期（四）</option>
+              <option value="5">星期（五）</option>
+              <option value="6">星期（六）</option>
+              <option value="0">星期（日）</option>
+            </select>
+            <select id="history-number" aria-label="篩選號碼" class="rounded-lg border border-slate-700 bg-slate-800 px-2.5 py-2 text-xs font-bold text-white">
+              <option value="">全部號碼</option>
+            </select>
+            <button id="btn-history-reset" type="button" class="col-span-2 sm:col-span-1 rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs font-bold text-slate-300 hover:bg-slate-700 transition">清除篩選</button>
+          </div>
         </div>
         <div class="overflow-x-auto max-h-[560px] overflow-y-auto rounded-xl border-2 border-slate-700">
           <table class="w-full text-left text-xs border-collapse">
@@ -975,6 +1050,15 @@
     let scoreChartInstance = null;
 
     function pad2(n) { return String(n).padStart(2, '0'); }
+    const WEEKDAY_LABELS = ['（日）', '（一）', '（二）', '（三）', '（四）', '（五）', '（六）'];
+    function getWeekdayIndex(dateStr) {
+      if (!dateStr || !/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return -1;
+      return new Date(dateStr + 'T00:00:00Z').getUTCDay();
+    }
+    function formatDateWithWeekday(dateStr) {
+      const idx = getWeekdayIndex(dateStr);
+      return idx === -1 ? (dateStr || '-') : `${dateStr}${WEEKDAY_LABELS[idx]}`;
+    }
     function ballZoneClass(n) {
       const v = Number(n);
       if (v <= 9) return 'ball-zone-0';
@@ -1268,6 +1352,8 @@
         predicted_recommended: pred.recommended_numbers,
         predicted_solo: soloList,
         predicted_tudigong: tudi,
+        predicted_flames: pred.tudigong_number.isFlame ? [tudi] : [],
+        tudigong_is_flame: Boolean(pred.tudigong_number.isFlame),
         hit_numbers: allHits,
         hit_count: allHits.length,
         hit_categories: cats.length > 0 ? cats : ['未命中'],
@@ -1281,9 +1367,14 @@
       const startIdx = Math.max(88, allDraws.length - 20);
       for (let i = startIdx; i < allDraws.length; i++) {
         const actual = allDraws[i];
-        if (!existing.has(actual.draw_date)) {
+        const prev = existing.get(actual.draw_date);
+        if (!prev) {
           const priorPred = generatePrediction(allDraws.slice(0, i), actual.draw_date, topK, 88);
           existing.set(actual.draw_date, gradePrediction(priorPred, actual));
+        } else if (prev.tudigong_is_flame === undefined && !Array.isArray(prev.predicted_flames)) {
+          const priorPred = generatePrediction(allDraws.slice(0, i), actual.draw_date, topK, 88);
+          prev.tudigong_is_flame = Boolean(priorPred.tudigong_number.isFlame);
+          prev.predicted_flames = priorPred.tudigong_number.isFlame ? [prev.predicted_tudigong] : [];
         }
       }
       const list = Array.from(existing.values()).sort((a, b) => b.draw_date.localeCompare(a.draw_date));
@@ -1299,9 +1390,9 @@
       gradedHistory = buildOrLoadGradedHistory(draws, topK);
 
       document.getElementById('dataset-subtitle').textContent = `已載入 ${draws.length} 期（${draws[0].draw_date} ～ ${latest.draw_date}）`;
-      document.getElementById('latest-date').textContent = latest.draw_date;
+      document.getElementById('latest-date').textContent = formatDateWithWeekday(latest.draw_date);
       document.getElementById('stat-total-draws').textContent = `${draws.length} 期`;
-      document.getElementById('stat-target-date').textContent = targetDate;
+      document.getElementById('stat-target-date').textContent = formatDateWithWeekday(targetDate);
       document.getElementById('latest-balls').innerHTML = latest.numbers.map(n => `<span class="lotto-ball lotto-ball-latest ${ballZoneClass(n)}">${pad2(n)}</span>`).join('');
 
       document.getElementById('flame-status-text').textContent = '以最新一期往前 88 期計算：週期拖牌 + 共現聽牌 + 獨支動能';
@@ -1324,7 +1415,7 @@
 
 
 
-      document.getElementById('tudigong-date').textContent = targetDate;
+      document.getElementById('tudigong-date').textContent = formatDateWithWeekday(targetDate);
       const tudiCard = document.getElementById('tudigong-card');
       if (pred.tudigong_number.isFlame) {
         tudiCard.className = 'rounded-2xl p-4 sm:p-5 flex flex-col justify-between flame-box';
@@ -1421,10 +1512,11 @@
 
       document.getElementById('graded-mobile-cards').innerHTML = gradedHistory.map((g, idx) => {
         const hitSet = new Set(g.hit_numbers);
+        const isTudiFlame = Boolean(g.tudigong_is_flame || (Array.isArray(g.predicted_flames) && g.predicted_flames.includes(g.predicted_tudigong)));
         return `
           <div class="rounded-2xl border-2 border-slate-700 ${idx % 2 === 0 ? 'bg-[#0b0f17]' : 'bg-[#151e2e]'} p-3.5 space-y-3">
             <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-700/80 pb-2">
-              <span class="text-base font-black text-white">${g.draw_date}</span>
+              <span class="text-base font-black text-white">${formatDateWithWeekday(g.draw_date)}</span>
               ${g.hit_count > 0
                 ? `<span class="rounded-lg bg-rose-500/25 border border-rose-400/50 px-2.5 py-1 text-xs font-extrabold text-rose-200">中 ${g.hit_count} 顆：${g.hit_categories.join(' + ')}</span>`
                 : '<span class="text-xs font-bold text-slate-500">未命中</span>'}
@@ -1443,8 +1535,11 @@
                 <div class="flex gap-2">${g.predicted_solo.map(n => `<span class="lotto-ball lotto-ball-sm ball-purple ${hitSet.has(n) ? 'hit-ring' : ''}">${n}</span>`).join('')}</div>
               </div>
               <div>
-                <div class="text-[11px] font-bold text-red-300 mb-1">土地公</div>
-                <span class="lotto-ball lotto-ball-sm ball-red-luck ${hitSet.has(g.predicted_tudigong) ? 'hit-ring' : ''}">${g.predicted_tudigong}</span>
+                <div class="text-[11px] font-bold text-red-300 mb-1">土地公${isTudiFlame ? ' 🔥' : ''}</div>
+                <span class="relative inline-flex">
+                  <span class="lotto-ball lotto-ball-sm ball-red-luck ${isTudiFlame ? 'ball-flame-ring' : ''} ${hitSet.has(g.predicted_tudigong) ? 'hit-ring' : ''}">${g.predicted_tudigong}</span>
+                  ${isTudiFlame ? '<span class="flame-mini-badge">🔥</span>' : ''}
+                </span>
               </div>
             </div>
           </div>
@@ -1453,13 +1548,14 @@
 
       document.getElementById('graded-tbody').innerHTML = gradedHistory.map((g, idx) => {
         const hitSet = new Set(g.hit_numbers);
+        const isTudiFlame = Boolean(g.tudigong_is_flame || (Array.isArray(g.predicted_flames) && g.predicted_flames.includes(g.predicted_tudigong)));
         return `
           <tr class="${idx % 2 === 0 ? 'bg-[#0b0f17]' : 'bg-[#161e2e]'} border-b-2 border-slate-700">
-            <td class="py-3 px-3 font-bold text-white whitespace-nowrap">${g.draw_date}</td>
+            <td class="py-3 px-3 font-bold text-white whitespace-nowrap">${formatDateWithWeekday(g.draw_date)}</td>
             <td class="py-3 px-2"><div class="flex flex-wrap gap-1.5">${g.actual_numbers.map(n => `<span class="lotto-ball lotto-ball-sm ${ballZoneClass(n)} ${hitSet.has(n) ? 'hit-ring' : ''}">${n}</span>`).join('')}</div></td>
             <td class="py-3 px-2"><div class="flex flex-wrap gap-1.5">${g.predicted_recommended.map(n => `<span class="lotto-ball lotto-ball-sm ${ballZoneClass(n)} ${hitSet.has(n) ? 'hit-ring' : ''}">${n}</span>`).join('')}</div></td>
             <td class="py-3 px-2"><div class="flex gap-1.5">${g.predicted_solo.map(n => `<span class="lotto-ball lotto-ball-sm ball-purple ${hitSet.has(n) ? 'hit-ring' : ''}">${n}</span>`).join('')}</div></td>
-            <td class="py-3 px-2"><span class="lotto-ball lotto-ball-sm ball-red-luck ${hitSet.has(g.predicted_tudigong) ? 'hit-ring' : ''}">${g.predicted_tudigong}</span></td>
+            <td class="py-3 px-2"><span class="relative inline-flex"><span class="lotto-ball lotto-ball-sm ball-red-luck ${isTudiFlame ? 'ball-flame-ring' : ''} ${hitSet.has(g.predicted_tudigong) ? 'hit-ring' : ''}">${g.predicted_tudigong}</span>${isTudiFlame ? '<span class="flame-mini-badge">🔥</span>' : ''}</span></td>
             <td class="py-3 px-3">${g.hit_count > 0 ? `<span class="inline-block rounded-lg bg-rose-500/25 border border-rose-400/50 px-2.5 py-1 font-extrabold text-rose-200">中 ${g.hit_count} 顆：${g.hit_categories.join(' + ')}</span>` : '<span class="text-slate-500">未命中</span>'}</td>
           </tr>
         `;
@@ -1471,11 +1567,12 @@
           <td class="py-2.5 px-2 font-extrabold text-white">${p.pair.join(' + ')}</td>
           <td class="py-2.5 px-2 text-right font-bold text-slate-300">${p.hits} / ${p.leadTotal}</td>
           <td class="py-2.5 px-2 text-right text-amber-300 font-extrabold">${(p.rate * 100).toFixed(1)}%</td>
-          <td class="py-2.5 px-3 text-right">${p.activeNow ? '<span class="rounded bg-emerald-500/20 border border-emerald-400/40 px-2 py-0.5 font-bold text-emerald-300">近期觸發</span>' : '<span class="text-slate-500">待觸發</span>'}</td>
+          <td class="py-2.5 px-2 text-right whitespace-nowrap">${p.activeNow ? '<span class="inline-block whitespace-nowrap rounded bg-emerald-500/20 border border-emerald-400/40 px-2 py-0.5 text-[11px] font-bold text-emerald-300">近期觸發</span>' : '<span class="whitespace-nowrap text-[11px] text-slate-500">待觸發</span>'}</td>
         </tr>
       `).join('');
 
       renderCycleQuery();
+      populateHistoryFilterOptions();
       renderHistoryTable();
       latestExportJson = { ...pred, recent_graded_history: gradedHistory.slice(0, 30) };
     }
@@ -1501,15 +1598,50 @@
       }).join('');
     }
 
+    function populateHistoryFilterOptions() {
+      const yearSel = document.getElementById('history-year');
+      const numSel = document.getElementById('history-number');
+      if (!yearSel || !numSel) return;
+      const prevYear = yearSel.value;
+      const years = [...new Set(draws.map(d => (d.draw_date || '').slice(0, 4)).filter(Boolean))].sort((a, b) => b.localeCompare(a));
+      yearSel.innerHTML = '<option value="">全部年份</option>' + years.map(y => `<option value="${y}">${y} 年</option>`).join('');
+      if (years.includes(prevYear)) yearSel.value = prevYear;
+
+      if (numSel.options.length <= 1) {
+        const opts = ['<option value="">全部號碼</option>'];
+        for (let n = 1; n <= 39; n++) {
+          const s = pad2(n);
+          opts.push(`<option value="${n}">${s}</option>`);
+        }
+        numSel.innerHTML = opts.join('');
+      }
+    }
+
     function renderHistoryTable() {
-      const q = document.getElementById('history-filter').value.trim();
-      const rev = [...draws].reverse().filter(d => !q || d.draw_date.includes(q) || d.numbers.map(pad2).some(s => s.includes(q)));
+      const yVal = document.getElementById('history-year')?.value || '';
+      const mVal = document.getElementById('history-month')?.value || '';
+      const wVal = document.getElementById('history-weekday')?.value || '';
+      const nVal = document.getElementById('history-number')?.value || '';
+      const targetNum = nVal ? Number(nVal) : null;
+      const targetWd = wVal !== '' ? Number(wVal) : null;
+
+      const rev = [...draws].reverse().filter(d => {
+        if (yVal && !d.draw_date.startsWith(yVal + '-')) return false;
+        if (mVal && d.draw_date.slice(5, 7) !== mVal) return false;
+        if (targetWd !== null && getWeekdayIndex(d.draw_date) !== targetWd) return false;
+        if (targetNum !== null && !d.numbers.includes(targetNum)) return false;
+        return true;
+      });
+
+      const countEl = document.getElementById('history-match-count');
+      if (countEl) countEl.textContent = `顯示 ${rev.length} / ${draws.length} 期`;
+
       document.getElementById('history-tbody').innerHTML = rev.map((d, idx) => `
         <tr class="${idx % 2 === 0 ? 'bg-[#0b0f17]' : 'bg-[#192234]'} border-b-2 border-slate-600/80 hover:bg-slate-700/50 transition">
-          <td class="py-3 px-4 text-base font-black tracking-wide text-white border-r-2 border-slate-700 whitespace-nowrap">${d.draw_date}</td>
-          <td class="py-3 px-4"><div class="flex flex-wrap gap-2">${d.numbers.map(n => `<span class="lotto-ball lotto-ball-sm ${ballZoneClass(n)}">${pad2(n)}</span>`).join('')}</div></td>
+          <td class="py-3 px-4 text-sm sm:text-base font-black tracking-wide text-white border-r-2 border-slate-700 whitespace-nowrap">${formatDateWithWeekday(d.draw_date)}</td>
+          <td class="py-3 px-4"><div class="flex flex-wrap gap-2">${d.numbers.map(n => `<span class="lotto-ball lotto-ball-sm ${ballZoneClass(n)} ${targetNum === n ? 'hit-ring' : ''}">${pad2(n)}</span>`).join('')}</div></td>
         </tr>
-      `).join('');
+      `).join('') || '<tr><td colspan="2" class="py-8 text-center text-sm font-bold text-slate-400">查無符合條件的開獎紀錄</td></tr>';
     }
 
     function switchTab(target) {
@@ -1539,7 +1671,16 @@
     });
 
     document.getElementById('btn-run-cycle').addEventListener('click', renderCycleQuery);
-    document.getElementById('history-filter').addEventListener('input', renderHistoryTable);
+    ['history-year', 'history-month', 'history-weekday', 'history-number'].forEach(id => {
+      document.getElementById(id)?.addEventListener('change', renderHistoryTable);
+    });
+    document.getElementById('btn-history-reset')?.addEventListener('click', () => {
+      ['history-year', 'history-month', 'history-weekday', 'history-number'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+      renderHistoryTable();
+    });
 
     document.getElementById('btn-add-draw').addEventListener('click', () => {
       const dateStr = document.getElementById('manual-date').value;
@@ -1658,7 +1799,47 @@
       }
     }
 
+    const AUTH_STORAGE_KEY = 'daily539_auth_v1';
+    const AUTH_PASS_HASH = 2646306843;
+    function hashAuthInput(str) {
+      let h = 2166136261;
+      for (let i = 0; i < str.length; i++) {
+        h ^= str.charCodeAt(i);
+        h = Math.imul(h, 16777619);
+      }
+      return h >>> 0;
+    }
+    function initAuthGate() {
+      const gate = document.getElementById('auth-gate');
+      if (!gate) return;
+      try {
+        if (localStorage.getItem(AUTH_STORAGE_KEY) === String(AUTH_PASS_HASH) ||
+            sessionStorage.getItem(AUTH_STORAGE_KEY) === String(AUTH_PASS_HASH)) {
+          gate.classList.add('hidden');
+          return;
+        }
+      } catch (e) {}
+      document.getElementById('auth-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const val = document.getElementById('auth-password').value;
+        const errEl = document.getElementById('auth-error');
+        if (hashAuthInput(val) === AUTH_PASS_HASH) {
+          errEl.classList.add('hidden');
+          const remember = document.getElementById('auth-remember').checked;
+          try {
+            if (remember) localStorage.setItem(AUTH_STORAGE_KEY, String(AUTH_PASS_HASH));
+            else sessionStorage.setItem(AUTH_STORAGE_KEY, String(AUTH_PASS_HASH));
+          } catch (err) {}
+          gate.classList.add('hidden');
+        } else {
+          errEl.classList.remove('hidden');
+          document.getElementById('auth-password').focus();
+        }
+      });
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
+      initAuthGate();
       if (document.body.classList.contains('force-mobile')) {
         document.getElementById('btn-toggle-view').textContent = '切換電腦版';
       }

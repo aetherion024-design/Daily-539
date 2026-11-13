@@ -4,13 +4,13 @@
 功能：
 1. 自動抓取與合併歷史資料（114 年至今，並支援每日 21:35 自動更新）。
 2. 以最新一期往前滾動「88 期」為基準，產出：
-   - 每日推薦 7～8 碼（綜合權重排序）
+   - 每日推薦固定 7 碼（綜合權重排序）
    - 獨支 1～2 支（單支在 88 期內固定間隔週期出現頻率最高者）
    - 週期規律牌組（隔 3～5 期拖牌 + 前導號帶出固定雙星）
    - 每日土地公幸運號碼 1 碼（嚴格排除推薦主牌與獨支後挑選，不重複）
    - AI 高機率火焰框判定（僅當系統判定綜合機率達高標門檻時標記火焰框，否則不標記）
    - 近 88 期最久未開 Top 5 冷門追蹤，若開出則自動移出並記錄「幾期沒開、於哪天開出」
-3. 自動對獎與紀錄留存（標註土地公／獨支／推薦 7～8 碼命中顆數）。
+3. 自動對獎與紀錄留存（標註土地公／獨支／推薦 7 碼命中顆數）。
 """
 
 from __future__ import annotations
@@ -322,7 +322,7 @@ class Rolling88Analyzer:
             },
         }
 
-    def generate_prediction(self, target_date: str, top_k: int = 8) -> Dict[str, object]:
+    def generate_prediction(self, target_date: str, top_k: int = 7) -> Dict[str, object]:
         solo = self.analyze_solo_numbers(top_n=2)
         cycles = self.analyze_cycle_rules(lag_min=3, lag_max=5)
         cold_info = self.analyze_coldest_and_icebreakers(top_n=5)
@@ -418,6 +418,7 @@ def grade_prediction(pred: Dict[str, object], actual: DrawRecord) -> Dict[str, o
         "predicted_solo": solo_list,
         "predicted_tudigong": tudi,
         "predicted_flames": pred.get("ai_flame_numbers", []),
+        "tudigong_is_flame": bool(pred["tudigong_number"].get("is_flame", False)),
         "hit_numbers": all_hits,
         "hit_count": len(all_hits),
         "hit_categories": categories if categories else ["未命中"],
@@ -431,7 +432,7 @@ def main() -> None:
     parser.add_argument("--pred-history-json", default="data/539_prediction_history.json")
     parser.add_argument("--out", default="output/539_latest_recommend.json")
     parser.add_argument("--update", action="store_true")
-    parser.add_argument("--top", type=int, default=7, choices=[7, 8])
+    parser.add_argument("--top", type=int, default=7, choices=[7])
     args = parser.parse_args()
 
     history_path = Path(args.history_json)
