@@ -108,7 +108,7 @@
     body.force-mobile #graded-mobile-cards { display: flex !important; }
   </style>
 </head>
-<body class="min-h-screen antialiased ">
+<body class="min-h-screen antialiased force-mobile">
   <!-- 進站密碼鎖 (方案 A) -->
   <div id="auth-gate" class="fixed inset-0 z-[100] flex items-center justify-center bg-[#05070b] px-4">
     <div class="card-dark w-full max-w-sm rounded-2xl p-6 space-y-5 border-amber-500/40">
@@ -1153,9 +1153,13 @@
         let bestGap = 1, bestHits = 0;
         for (const [g, c] of gapCnt.entries()) { if (c > bestHits || (c === bestHits && g < bestGap)) { bestGap = g; bestHits = c; } }
         const sinceLast = (total - 1) - pos[pos.length - 1];
-        let bonus = sinceLast + 1 === bestGap ? 25 : (Math.abs((sinceLast + 1) - bestGap) <= 1 ? 12 : 0);
+        const recent30 = pos.filter(p => p >= Math.max(0, total - 30)).length;
+        let bonus = 0;
+        if (sinceLast + 1 === bestGap) bonus = 45;
+        else if (Math.abs((sinceLast + 1) - bestGap) <= 1) bonus = 22;
+        else if (sinceLast === 0 && bestGap > 1) bonus = -15;
         const regRatio = bestHits / Math.max(pos.length - 1, 1);
-        const score = pos.length * 2.2 + bestHits * 5.0 + regRatio * 20.0 + bonus;
+        const score = pos.length * 1.0 + recent30 * 3.0 + bestHits * 3.5 + regRatio * 18.0 + bonus;
         list.push({
           number: num, formatted: pad2(num), freq: pos.length, bestGap, bestHits, sinceLast, score: Number(score.toFixed(1)),
           reason: `近${total}期開 ${pos.length} 次，間隔 ${bestGap} 期規律出現 ${bestHits} 次（目前已隔 ${sinceLast} 期）`

@@ -193,9 +193,17 @@ class Rolling88Analyzer:
             gaps = [positions[i] - positions[i - 1] for i in range(1, len(positions))]
             best_gap, best_gap_hits = Counter(gaps).most_common(1)[0]
             draws_since_last = (total - 1) - positions[-1]
-            cycle_match_bonus = 25.0 if draws_since_last + 1 == best_gap else (12.0 if abs((draws_since_last + 1) - best_gap) <= 1 else 0.0)
+            recent_30 = sum(1 for p in positions if p >= max(0, total - 30))
+            if draws_since_last + 1 == best_gap:
+                cycle_match_bonus = 45.0
+            elif abs((draws_since_last + 1) - best_gap) <= 1:
+                cycle_match_bonus = 22.0
+            elif draws_since_last == 0 and best_gap > 1:
+                cycle_match_bonus = -15.0
+            else:
+                cycle_match_bonus = 0.0
             regularity_ratio = best_gap_hits / max(len(gaps), 1)
-            score = freq * 2.2 + best_gap_hits * 5.0 + regularity_ratio * 20.0 + cycle_match_bonus
+            score = freq * 1.0 + recent_30 * 3.0 + best_gap_hits * 3.5 + regularity_ratio * 18.0 + cycle_match_bonus
             solo_candidates.append(
                 {
                     "number": num,
