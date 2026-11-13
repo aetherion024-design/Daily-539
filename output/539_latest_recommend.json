@@ -27,7 +27,7 @@
     {
       "number": 8,
       "formatted": "08",
-      "score": 41.0,
+      "score": 41.9,
       "is_flame": false
     },
     {
@@ -64,7 +64,7 @@
       "best_interval": 2,
       "interval_hits": 5,
       "draws_since_last": 1,
-      "score": 99.3,
+      "score": 105.2,
       "reason": "近88期開20次，間隔2期規律出現5次（已隔1期）"
     },
     {
@@ -74,7 +74,7 @@
       "best_interval": 1,
       "interval_hits": 4,
       "draws_since_last": 0,
-      "score": 82.0,
+      "score": 90.5,
       "reason": "近88期開14次，間隔1期規律出現4次（已隔0期）"
     }
   ],
