@@ -1,98 +1,98 @@
 {
-  "target_date": "2026-11-13",
-  "based_on_last_draw": "2026-11-12",
+  "target_date": "2026-11-14",
+  "based_on_last_draw": "2026-11-13",
   "window_draws": 88,
   "recommended_numbers": [
     "30",
-    "32",
-    "04",
-    "17",
-    "02",
     "19",
+    "08",
+    "34",
+    "28",
+    "12",
     "07"
   ],
   "recommended_details": [
     {
       "number": 30,
       "formatted": "30",
-      "score": 45.0,
-      "is_flame": false
-    },
-    {
-      "number": 32,
-      "formatted": "32",
-      "score": 43.0,
-      "is_flame": false
-    },
-    {
-      "number": 4,
-      "formatted": "04",
-      "score": 40.0,
-      "is_flame": false
-    },
-    {
-      "number": 17,
-      "formatted": "17",
-      "score": 39.5,
-      "is_flame": false
-    },
-    {
-      "number": 2,
-      "formatted": "02",
-      "score": 39.3,
-      "is_flame": false
+      "score": 100.0,
+      "is_flame": true
     },
     {
       "number": 19,
       "formatted": "19",
-      "score": 35.5,
+      "score": 47.3,
+      "is_flame": false
+    },
+    {
+      "number": 8,
+      "formatted": "08",
+      "score": 41.0,
+      "is_flame": false
+    },
+    {
+      "number": 34,
+      "formatted": "34",
+      "score": 36.4,
+      "is_flame": false
+    },
+    {
+      "number": 28,
+      "formatted": "28",
+      "score": 34.7,
+      "is_flame": false
+    },
+    {
+      "number": 12,
+      "formatted": "12",
+      "score": 34.3,
       "is_flame": false
     },
     {
       "number": 7,
       "formatted": "07",
-      "score": 31.9,
+      "score": 28.4,
       "is_flame": false
     }
   ],
   "ai_flame_numbers": [],
   "solo_numbers": [
     {
-      "number": 19,
-      "formatted": "19",
-      "freq_in_88": 14,
-      "best_interval": 3,
-      "interval_hits": 3,
-      "draws_since_last": 2,
-      "score": 75.4,
-      "reason": "近88期開14次，間隔3期規律出現3次（已隔2期）"
+      "number": 30,
+      "formatted": "30",
+      "freq_in_88": 20,
+      "best_interval": 2,
+      "interval_hits": 5,
+      "draws_since_last": 1,
+      "score": 99.3,
+      "reason": "近88期開20次，間隔2期規律出現5次（已隔1期）"
     },
     {
-      "number": 32,
-      "formatted": "32",
-      "freq_in_88": 17,
+      "number": 8,
+      "formatted": "08",
+      "freq_in_88": 14,
       "best_interval": 1,
       "interval_hits": 4,
-      "draws_since_last": 1,
-      "score": 74.4,
-      "reason": "近88期開17次，間隔1期規律出現4次（已隔1期）"
+      "draws_since_last": 0,
+      "score": 82.0,
+      "reason": "近88期開14次，間隔1期規律出現4次（已隔0期）"
     }
   ],
   "tudigong_number": {
-    "number": 3,
-    "formatted": "03",
-    "target_date": "2026-11-13",
-    "freq_in_88": 11,
-    "note": "已排除推薦主牌與獨支，依 2026-11-13 土地公吉數定號（近88期開 11 次）",
+    "number": 20,
+    "formatted": "20",
+    "target_date": "2026-11-14",
+    "freq_in_88": 10,
+    "note": "已排除推薦主牌與獨支，依 2026-11-14 土地公吉數定號（近88期開 10 次）",
     "is_flame": false,
-    "ai_score": 9.3
+    "ai_score": 0.0
   },
   "tail_and_bs": {
     "best_tail": {
       "tail": 5,
-      "count": 44,
-      "omitted": 8,
-      "score": 80.8,
+      "count": 45,
+      "omitted": 9,
+      "score": 85.5,
       "nums": [
         "05",
         "15",
@@ -103,9 +103,9 @@
     "top3_tails": [
       {
         "tail": 5,
-        "count": 44,
-        "omitted": 8,
-        "score": 80.8,
+        "count": 45,
+        "omitted": 9,
+        "score": 85.5,
         "nums": [
           "05",
           "15",
@@ -114,22 +114,22 @@
         ]
       },
       {
-        "tail": 2,
-        "count": 53,
+        "tail": 8,
+        "count": 51,
         "omitted": 0,
-        "score": 79.6,
+        "score": 77.2,
         "nums": [
-          "02",
-          "12",
-          "22",
-          "32"
+          "08",
+          "18",
+          "28",
+          "38"
         ]
       },
       {
         "tail": 4,
         "count": 50,
-        "omitted": 1,
-        "score": 71.5,
+        "omitted": 2,
+        "score": 75.0,
         "nums": [
           "04",
           "14",
@@ -139,13 +139,13 @@
       }
     ],
     "big_small": {
-      "big_count": 41,
-      "small_count": 45,
+      "big_count": 43,
+      "small_count": 43,
       "tie_count": 2,
-      "big_prob": 46.6,
-      "small_prob": 51.1,
+      "big_prob": 48.9,
+      "small_prob": 48.9,
       "tie_prob": 2.3,
-      "avg_sum": 98.5
+      "avg_sum": 99.0
     }
   },
   "cold_tracking": {
@@ -153,31 +153,31 @@
       {
         "number": 25,
         "formatted": "25",
-        "omitted_draws": 23,
+        "omitted_draws": 24,
         "last_seen_date": "2026-10-16"
       },
       {
         "number": 16,
         "formatted": "16",
-        "omitted_draws": 21,
+        "omitted_draws": 22,
         "last_seen_date": "2026-10-19"
       },
       {
         "number": 4,
         "formatted": "04",
-        "omitted_draws": 19,
+        "omitted_draws": 20,
         "last_seen_date": "2026-10-21"
       },
       {
         "number": 3,
         "formatted": "03",
-        "omitted_draws": 17,
+        "omitted_draws": 18,
         "last_seen_date": "2026-10-23"
       },
       {
         "number": 15,
         "formatted": "15",
-        "omitted_draws": 14,
+        "omitted_draws": 15,
         "last_seen_date": "2026-10-27"
       }
     ],
@@ -239,37 +239,37 @@
       {
         "number": 29,
         "formatted": "29",
-        "omitted_before_hit": 21,
+        "omitted_before_hit": 22,
         "hit_date": "2026-11-02"
       },
       {
         "number": 33,
         "formatted": "33",
-        "omitted_before_hit": 21,
+        "omitted_before_hit": 22,
         "hit_date": "2026-11-02"
       },
       {
         "number": 5,
         "formatted": "05",
-        "omitted_before_hit": 19,
+        "omitted_before_hit": 20,
         "hit_date": "2026-10-31"
       },
       {
         "number": 31,
         "formatted": "31",
-        "omitted_before_hit": 16,
+        "omitted_before_hit": 17,
         "hit_date": "2026-10-30"
       },
       {
         "number": 37,
         "formatted": "37",
-        "omitted_before_hit": 67,
+        "omitted_before_hit": 64,
         "hit_date": "2026-10-30"
       },
       {
         "number": 11,
         "formatted": "11",
-        "omitted_before_hit": 16,
+        "omitted_before_hit": 17,
         "hit_date": "2026-10-28"
       }
     ]
@@ -277,118 +277,118 @@
   "cycle_patterns": {
     "lag_3_to_5_rules": [
       {
+        "trigger": "19",
+        "trigger_date": "2026-11-10",
+        "lag": 4,
+        "target": "12",
+        "hits": 8,
+        "total": 15,
+        "probability": 0.5333,
+        "lift": 4.16
+      },
+      {
         "trigger": "34",
-        "trigger_date": "2026-11-07",
-        "lag": 5,
+        "trigger_date": "2026-11-10",
+        "lag": 4,
         "target": "30",
         "hits": 6,
-        "total": 12,
-        "probability": 0.5,
-        "lift": 3.9
-      },
-      {
-        "trigger": "30",
-        "trigger_date": "2026-11-09",
-        "lag": 4,
-        "target": "03",
-        "hits": 6,
-        "total": 17,
-        "probability": 0.3529,
-        "lift": 2.75
-      },
-      {
-        "trigger": "09",
-        "trigger_date": "2026-11-09",
-        "lag": 4,
-        "target": "02",
-        "hits": 5,
-        "total": 10,
-        "probability": 0.5,
-        "lift": 3.9
+        "total": 14,
+        "probability": 0.4286,
+        "lift": 3.34
       },
       {
         "trigger": "28",
         "trigger_date": "2026-11-09",
-        "lag": 4,
-        "target": "28",
-        "hits": 5,
-        "total": 12,
-        "probability": 0.4167,
-        "lift": 3.25
-      },
-      {
-        "trigger": "34",
-        "trigger_date": "2026-11-10",
-        "lag": 3,
-        "target": "26",
-        "hits": 5,
-        "total": 13,
-        "probability": 0.3846,
-        "lift": 3.0
-      },
-      {
-        "trigger": "34",
-        "trigger_date": "2026-11-10",
-        "lag": 3,
-        "target": "14",
-        "hits": 5,
-        "total": 13,
-        "probability": 0.3846,
-        "lift": 3.0
-      },
-      {
-        "trigger": "07",
-        "trigger_date": "2026-11-09",
-        "lag": 4,
-        "target": "09",
-        "hits": 5,
-        "total": 14,
-        "probability": 0.3571,
-        "lift": 2.79
-      },
-      {
-        "trigger": "07",
-        "trigger_date": "2026-11-09",
-        "lag": 4,
-        "target": "30",
-        "hits": 5,
-        "total": 14,
-        "probability": 0.3571,
-        "lift": 2.79
-      },
-      {
-        "trigger": "32",
-        "trigger_date": "2026-11-07",
         "lag": 5,
         "target": "23",
         "hits": 5,
-        "total": 15,
-        "probability": 0.3333,
-        "lift": 2.6
+        "total": 13,
+        "probability": 0.3846,
+        "lift": 3.0
+      },
+      {
+        "trigger": "32",
+        "trigger_date": "2026-11-11",
+        "lag": 3,
+        "target": "12",
+        "hits": 5,
+        "total": 14,
+        "probability": 0.3571,
+        "lift": 2.79
+      },
+      {
+        "trigger": "34",
+        "trigger_date": "2026-11-10",
+        "lag": 4,
+        "target": "34",
+        "hits": 5,
+        "total": 14,
+        "probability": 0.3571,
+        "lift": 2.79
       },
       {
         "trigger": "30",
         "trigger_date": "2026-11-09",
-        "lag": 4,
-        "target": "06",
+        "lag": 5,
+        "target": "19",
         "hits": 5,
         "total": 17,
         "probability": 0.2941,
         "lift": 2.29
       },
       {
-        "trigger": "09",
+        "trigger": "30",
         "trigger_date": "2026-11-09",
+        "lag": 5,
+        "target": "28",
+        "hits": 5,
+        "total": 17,
+        "probability": 0.2941,
+        "lift": 2.29
+      },
+      {
+        "trigger": "30",
+        "trigger_date": "2026-11-09",
+        "lag": 5,
+        "target": "13",
+        "hits": 5,
+        "total": 17,
+        "probability": 0.2941,
+        "lift": 2.29
+      },
+      {
+        "trigger": "30",
+        "trigger_date": "2026-11-11",
+        "lag": 3,
+        "target": "19",
+        "hits": 5,
+        "total": 18,
+        "probability": 0.2778,
+        "lift": 2.17
+      },
+      {
+        "trigger": "33",
+        "trigger_date": "2026-11-09",
+        "lag": 5,
+        "target": "24",
+        "hits": 4,
+        "total": 9,
+        "probability": 0.4444,
+        "lift": 3.47
+      },
+      {
+        "trigger": "24",
+        "trigger_date": "2026-11-10",
         "lag": 4,
-        "target": "04",
+        "target": "11",
         "hits": 4,
         "total": 10,
         "probability": 0.4,
         "lift": 3.12
       },
       {
-        "trigger": "09",
-        "trigger_date": "2026-11-09",
+        "trigger": "24",
+        "trigger_date": "2026-11-10",
         "lag": 4,
         "target": "08",
         "hits": 4,
@@ -402,12 +402,34 @@
         "lead": "30",
         "active_now": true,
         "pair": [
-          "30",
+          "13",
+          "19"
+        ],
+        "hits": 13,
+        "lead_occurrences": 20,
+        "hit_rate": 0.65
+      },
+      {
+        "lead": "30",
+        "active_now": true,
+        "pair": [
+          "17",
+          "19"
+        ],
+        "hits": 12,
+        "lead_occurrences": 20,
+        "hit_rate": 0.6
+      },
+      {
+        "lead": "30",
+        "active_now": true,
+        "pair": [
+          "19",
           "34"
         ],
         "hits": 12,
-        "lead_occurrences": 19,
-        "hit_rate": 0.632
+        "lead_occurrences": 20,
+        "hit_rate": 0.6
       },
       {
         "lead": "30",
@@ -417,100 +439,112 @@
           "34"
         ],
         "hits": 12,
-        "lead_occurrences": 19,
-        "hit_rate": 0.632
+        "lead_occurrences": 20,
+        "hit_rate": 0.6
       },
       {
-        "lead": "19",
+        "lead": "02",
         "active_now": true,
         "pair": [
-          "02",
-          "17"
-        ],
-        "hits": 11,
-        "lead_occurrences": 14,
-        "hit_rate": 0.786
-      },
-      {
-        "lead": "19",
-        "active_now": true,
-        "pair": [
-          "02",
-          "30"
-        ],
-        "hits": 11,
-        "lead_occurrences": 14,
-        "hit_rate": 0.786
-      },
-      {
-        "lead": "19",
-        "active_now": true,
-        "pair": [
-          "06",
-          "17"
-        ],
-        "hits": 11,
-        "lead_occurrences": 14,
-        "hit_rate": 0.786
-      },
-      {
-        "lead": "19",
-        "active_now": true,
-        "pair": [
-          "17",
-          "30"
-        ],
-        "hits": 11,
-        "lead_occurrences": 14,
-        "hit_rate": 0.786
-      },
-      {
-        "lead": "34",
-        "active_now": true,
-        "pair": [
-          "30",
+          "08",
           "38"
         ],
         "hits": 11,
-        "lead_occurrences": 14,
-        "hit_rate": 0.786
+        "lead_occurrences": 17,
+        "hit_rate": 0.647
       },
       {
-        "lead": "34",
+        "lead": "30",
         "active_now": true,
         "pair": [
-          "02",
-          "30"
+          "07",
+          "19"
         ],
         "hits": 11,
-        "lead_occurrences": 14,
-        "hit_rate": 0.786
+        "lead_occurrences": 20,
+        "hit_rate": 0.55
+      },
+      {
+        "lead": "30",
+        "active_now": true,
+        "pair": [
+          "34",
+          "39"
+        ],
+        "hits": 11,
+        "lead_occurrences": 20,
+        "hit_rate": 0.55
       },
       {
         "lead": "02",
         "active_now": true,
         "pair": [
-          "10",
+          "05",
           "30"
         ],
-        "hits": 11,
-        "lead_occurrences": 16,
-        "hit_rate": 0.688
+        "hits": 10,
+        "lead_occurrences": 17,
+        "hit_rate": 0.588
       },
       {
         "lead": "02",
         "active_now": true,
         "pair": [
-          "30",
-          "34"
+          "08",
+          "10"
         ],
-        "hits": 11,
-        "lead_occurrences": 16,
-        "hit_rate": 0.688
+        "hits": 10,
+        "lead_occurrences": 17,
+        "hit_rate": 0.588
+      },
+      {
+        "lead": "02",
+        "active_now": true,
+        "pair": [
+          "08",
+          "30"
+        ],
+        "hits": 10,
+        "lead_occurrences": 17,
+        "hit_rate": 0.588
       }
     ]
   },
   "recent_graded_history": [
+    {
+      "draw_date": "2026-11-13",
+      "actual_numbers": [
+        "08",
+        "11",
+        "17",
+        "38",
+        "39"
+      ],
+      "predicted_recommended": [
+        "30",
+        "19",
+        "07",
+        "34",
+        "17",
+        "02",
+        "28"
+      ],
+      "predicted_solo": [
+        "30",
+        "19"
+      ],
+      "predicted_tudigong": "04",
+      "predicted_flames": [],
+      "tudigong_is_flame": false,
+      "hit_numbers": [
+        "17"
+      ],
+      "hit_count": 1,
+      "hit_categories": [
+        "推薦7碼(17)"
+      ],
+      "tudigong_hit": false
+    },
     {
       "draw_date": "2026-11-12",
       "actual_numbers": [
