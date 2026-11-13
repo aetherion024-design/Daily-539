@@ -2,8 +2,9 @@ name: Auto Update 539
 
 on:
   schedule:
-    # 台灣時間 (UTC+8) 週一至週六 21:35 自動執行
-    - cron: '35 13 * * 1-6'
+    # 台灣時間 (UTC+8) 週一至週六 21:43 與 22:13 自動執行（避開整點/半點尖峰，並提供雙重補抓保險）
+    - cron: '43 13 * * 1-6'
+    - cron: '13 14 * * 1-6'
   workflow_dispatch: # 支援隨時手動點按鈕測試
 
 permissions:
