@@ -282,17 +282,22 @@ class Rolling88Analyzer:
         return {"lag_3_to_5_rules": lag_rules[:12], "repeating_lead_pairs": repeating_patterns[:10], "cycle_scores": dict(lag_scores)}
 
     def compute_tudigong_number(self, target_date: str, exclude_numbers: Set[int]) -> Dict[str, object]:
-        """排除推薦主牌與獨支後，從剩餘溫熱號碼池挑出 1 個土地公幸運號碼。"""
+        """排除推薦主牌與獨支後，從剩餘溫熱號碼池挑出 1 個土地公幸運號碼（與網頁端 FNV-1a 完全同步）。"""
         freq = Counter()
         for rec in self.records:
             freq.update(rec.numbers)
-        ordered = [n for n, _ in freq.most_common() if n not in exclude_numbers]
-        if not ordered:
-            ordered = [n for n in range(1, 40) if n not in exclude_numbers]
+        ordered = sorted(
+            [n for n in range(1, 40) if n not in exclude_numbers],
+            key=lambda n: (-freq[n], n),
+        )
         # 優先取排除後的溫熱中段區間
         pool = ordered[4:20] if len(ordered) >= 20 else ordered
-        digest = hashlib.sha256(f"TUDIGONG-539-{target_date}".encode("utf-8")).hexdigest()
-        pick = pool[int(digest[:8], 16) % len(pool)]
+        key = f"TUDIGONG-539-{target_date}"
+        h = 2166136261
+        for ch in key:
+            h ^= ord(ch)
+            h = (h * 16777619) & 0xFFFFFFFF
+        pick = pool[h % len(pool)]
         return {
             "number": pick,
             "formatted": f"{pick:02d}",
