@@ -37,6 +37,35 @@ class DrawRecord:
 
 
 PILIO_URL = "https://www.pilio.idv.tw/lto539/list539APP.asp"
+LOTTO8_URL = "https://www.lotto-8.com/listlto539.asp"
+
+
+def fetch_from_lotto8(max_pages: int = 10) -> List[DrawRecord]:
+    records: List[DrawRecord] = []
+    headers = {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+        )
+    }
+    row_pattern = re.compile(
+        r"(\d{4})/(\d{2})/(\d{2})\D{1,20}(\d{2})[,\s]+(\d{2})[,\s]+(\d{2})[,\s]+(\d{2})[,\s]+(\d{2})"
+    )
+    for page in range(1, max_pages + 1):
+        url = f"{LOTTO8_URL}?indexpage={page}&orderby=new"
+        req = urllib.request.Request(url, headers=headers)
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            html = resp.read().decode("utf-8", errors="ignore")
+        text = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", html))
+        matches = row_pattern.findall(text)
+        if not matches:
+            break
+        for yyyy, mm, dd, n1, n2, n3, n4, n5 in matches:
+            date_str = f"{int(yyyy):04d}-{int(mm):02d}-{int(dd):02d}"
+            nums = tuple(sorted(int(x) for x in (n1, n2, n3, n4, n5)))
+            if len(nums) == 5 and all(1 <= n <= 39 for n in nums):
+                records.append(DrawRecord(draw_date=date_str, period="", numbers=nums))
+    return deduplicate_and_sort(records)
 
 
 def fetch_from_pilio(max_pages: int = 26) -> List[DrawRecord]:
@@ -441,7 +470,13 @@ def main() -> None:
         for item in json.loads(history_path.read_text(encoding="utf-8")):
             records.append(DrawRecord(item["draw_date"], item.get("period", ""), tuple(item["numbers"])))
     if args.update:
-        records.extend(fetch_from_pilio())
+        for fetcher_name, fetcher in [("lotto-8", fetch_from_lotto8), ("pilio", fetch_from_pilio)]:
+            try:
+                fetched = fetcher()
+                print(f"[{fetcher_name}] 取得 {len(fetched)} 期（最新：{fetched[-1].draw_date if fetched else '無'}）")
+                records.extend(fetched)
+            except Exception as exc:
+                print(f"[{fetcher_name}] 抓取失敗略過：{exc}")
     records = filter_since_114(deduplicate_and_sort(records))
     if len(records) < 20:
         raise SystemExit("歷史資料不足。")
