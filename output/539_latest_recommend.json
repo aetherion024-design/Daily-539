@@ -1,124 +1,126 @@
 {
-  "target_date": "2026-11-14",
-  "based_on_last_draw": "2026-11-13",
+  "target_date": "2026-11-16",
+  "based_on_last_draw": "2026-11-14",
   "window_draws": 88,
   "recommended_numbers": [
     "30",
-    "08",
     "34",
-    "19",
-    "28",
-    "12",
-    "23"
+    "14",
+    "07",
+    "38",
+    "17",
+    "32"
   ],
   "recommended_details": [
     {
       "number": 30,
       "formatted": "30",
-      "score": 100.0,
-      "is_flame": true
-    },
-    {
-      "number": 8,
-      "formatted": "08",
-      "score": 38.5,
+      "score": 64.1,
       "is_flame": false
     },
     {
       "number": 34,
       "formatted": "34",
-      "score": 36.4,
+      "score": 54.1,
       "is_flame": false
     },
     {
-      "number": 19,
-      "formatted": "19",
-      "score": 35.5,
+      "number": 14,
+      "formatted": "14",
+      "score": 52.3,
       "is_flame": false
     },
     {
-      "number": 28,
-      "formatted": "28",
+      "number": 7,
+      "formatted": "07",
       "score": 34.7,
       "is_flame": false
     },
     {
-      "number": 12,
-      "formatted": "12",
-      "score": 34.3,
+      "number": 38,
+      "formatted": "38",
+      "score": 32.6,
       "is_flame": false
     },
     {
-      "number": 23,
-      "formatted": "23",
+      "number": 17,
+      "formatted": "17",
+      "score": 28.8,
+      "is_flame": false
+    },
+    {
+      "number": 32,
+      "formatted": "32",
       "score": 25.2,
       "is_flame": false
     }
   ],
-  "ai_flame_numbers": [],
+  "ai_flame_numbers": [
+    "30"
+  ],
   "solo_numbers": [
+    {
+      "number": 14,
+      "formatted": "14",
+      "freq_in_88": 14,
+      "best_interval": 4,
+      "interval_hits": 3,
+      "draws_since_last": 3,
+      "score": 91.7,
+      "reason": "近88期開14次，間隔4期規律出現3次（已隔3期）"
+    },
     {
       "number": 30,
       "formatted": "30",
-      "freq_in_88": 20,
+      "freq_in_88": 21,
       "best_interval": 2,
-      "interval_hits": 5,
-      "draws_since_last": 1,
-      "score": 105.2,
-      "reason": "近88期開20次，間隔2期規律出現5次（已隔1期）"
-    },
-    {
-      "number": 8,
-      "formatted": "08",
-      "freq_in_88": 14,
-      "best_interval": 1,
-      "interval_hits": 4,
+      "interval_hits": 6,
       "draws_since_last": 0,
-      "score": 90.5,
-      "reason": "近88期開14次，間隔1期規律出現4次（已隔0期）"
+      "score": 90.4,
+      "reason": "近88期開21次，間隔2期規律出現6次（已隔0期）"
     }
   ],
   "tudigong_number": {
-    "number": 19,
-    "formatted": "19",
-    "target_date": "2026-11-14",
-    "freq_in_88": 16,
+    "number": 30,
+    "formatted": "30",
+    "target_date": "2026-11-16",
+    "freq_in_88": 21,
     "show": true,
-    "is_flame": false,
-    "ai_score": 35.5,
-    "note": "01～39 強勢池自由嚴選（近88期開 16 次）｜★與主牌雙重共振"
+    "is_flame": true,
+    "ai_score": 64.1,
+    "note": "01～39 強勢池自由嚴選（近88期開 21 次）｜★與主牌/獨支雙重共振"
   },
   "tail_and_bs": {
     "best_tail": {
-      "tail": 8,
-      "count": 51,
-      "omitted": 0,
-      "score": 84.4,
+      "tail": 4,
+      "count": 50,
+      "omitted": 3,
+      "score": 91.5,
       "nums": [
-        "08",
-        "18",
-        "28",
-        "38"
+        "04",
+        "14",
+        "24",
+        "34"
       ]
     },
     "top3_tails": [
       {
-        "tail": 8,
-        "count": 51,
-        "omitted": 0,
-        "score": 84.4,
+        "tail": 4,
+        "count": 50,
+        "omitted": 3,
+        "score": 91.5,
         "nums": [
-          "08",
-          "18",
-          "28",
-          "38"
+          "04",
+          "14",
+          "24",
+          "34"
         ]
       },
       {
         "tail": 2,
         "count": 52,
-        "omitted": 1,
-        "score": 83.3,
+        "omitted": 0,
+        "score": 82.3,
         "nums": [
           "02",
           "12",
@@ -127,26 +129,26 @@
         ]
       },
       {
-        "tail": 4,
-        "count": 50,
-        "omitted": 2,
-        "score": 80.0,
+        "tail": 8,
+        "count": 51,
+        "omitted": 1,
+        "score": 79.9,
         "nums": [
-          "04",
-          "14",
-          "24",
-          "34"
+          "08",
+          "18",
+          "28",
+          "38"
         ]
       }
     ],
     "big_small": {
-      "big_count": 43,
+      "big_count": 42,
       "small_count": 43,
-      "tie_count": 2,
-      "big_prob": 48.9,
+      "tie_count": 3,
+      "big_prob": 47.7,
       "small_prob": 48.9,
-      "tie_prob": 2.3,
-      "avg_sum": 99.0
+      "tie_prob": 3.4,
+      "avg_sum": 98.3
     }
   },
   "cold_tracking": {
@@ -154,35 +156,41 @@
       {
         "number": 25,
         "formatted": "25",
-        "omitted_draws": 24,
+        "omitted_draws": 25,
         "last_seen_date": "2026-10-16"
       },
       {
         "number": 16,
         "formatted": "16",
-        "omitted_draws": 22,
+        "omitted_draws": 23,
         "last_seen_date": "2026-10-19"
       },
       {
         "number": 4,
         "formatted": "04",
-        "omitted_draws": 20,
+        "omitted_draws": 21,
         "last_seen_date": "2026-10-21"
-      },
-      {
-        "number": 3,
-        "formatted": "03",
-        "omitted_draws": 18,
-        "last_seen_date": "2026-10-23"
       },
       {
         "number": 15,
         "formatted": "15",
-        "omitted_draws": 15,
+        "omitted_draws": 16,
+        "last_seen_date": "2026-10-27"
+      },
+      {
+        "number": 27,
+        "formatted": "27",
+        "omitted_draws": 16,
         "last_seen_date": "2026-10-27"
       }
     ],
     "icebreakers": [
+      {
+        "number": 3,
+        "formatted": "03",
+        "omitted_before_hit": 18,
+        "hit_date": "2026-11-14"
+      },
       {
         "number": 1,
         "formatted": "01",
@@ -266,31 +274,25 @@
         "formatted": "37",
         "omitted_before_hit": 64,
         "hit_date": "2026-10-30"
-      },
-      {
-        "number": 11,
-        "formatted": "11",
-        "omitted_before_hit": 17,
-        "hit_date": "2026-10-28"
       }
     ]
   },
   "weekday_picks": {
-    "target_weekday": 5,
-    "target_label": "星期六",
+    "target_weekday": 0,
+    "target_label": "星期一",
     "today_pick": {
-      "weekday": 5,
-      "label": "星期六",
-      "number": 34,
-      "formatted": "34",
-      "hits": 5,
+      "weekday": 0,
+      "label": "星期一",
+      "number": 19,
+      "formatted": "19",
+      "hits": 6,
       "sample_draws": 20,
-      "prob_pct": 25.0,
-      "recent8": 3,
-      "since_wd": 0,
-      "score": 39.9,
+      "prob_pct": 30.0,
+      "recent8": 2,
+      "since_wd": 2,
+      "score": 33.9,
       "is_today": true,
-      "reason": "近20個星期六開出 5 次（25.0%），近8週同日出 3 次，已隔 0 週"
+      "reason": "近20個星期一開出 6 次（30.0%），近8週同日出 2 次，已隔 2 週"
     },
     "weekly": [
       {
@@ -303,23 +305,23 @@
         "prob_pct": 30.0,
         "recent8": 2,
         "since_wd": 2,
-        "score": 37.8,
-        "is_today": false,
+        "score": 33.9,
+        "is_today": true,
         "reason": "近20個星期一開出 6 次（30.0%），近8週同日出 2 次，已隔 2 週"
       },
       {
         "weekday": 1,
         "label": "星期二",
-        "number": 30,
-        "formatted": "30",
-        "hits": 7,
+        "number": 34,
+        "formatted": "34",
+        "hits": 4,
         "sample_draws": 20,
-        "prob_pct": 35.0,
+        "prob_pct": 20.0,
         "recent8": 3,
-        "since_wd": 1,
-        "score": 39.6,
+        "since_wd": 0,
+        "score": 39.0,
         "is_today": false,
-        "reason": "近20個星期二開出 7 次（35.0%），近8週同日出 3 次，已隔 1 週"
+        "reason": "近20個星期二開出 4 次（20.0%），近8週同日出 3 次，已隔 0 週"
       },
       {
         "weekday": 2,
@@ -331,7 +333,7 @@
         "prob_pct": 35.0,
         "recent8": 4,
         "since_wd": 0,
-        "score": 49.8,
+        "score": 54.9,
         "is_today": false,
         "reason": "近20個星期三開出 7 次（35.0%），近8週同日出 4 次，已隔 0 週"
       },
@@ -345,7 +347,7 @@
         "prob_pct": 30.0,
         "recent8": 3,
         "since_wd": 0,
-        "score": 53.0,
+        "score": 43.8,
         "is_today": false,
         "reason": "近20個星期四開出 6 次（30.0%），近8週同日出 3 次，已隔 0 週"
       },
@@ -359,7 +361,7 @@
         "prob_pct": 35.0,
         "recent8": 1,
         "since_wd": 2,
-        "score": 42.5,
+        "score": 37.7,
         "is_today": false,
         "reason": "近20個星期五開出 7 次（35.0%），近8週同日出 1 次，已隔 2 週"
       },
@@ -372,50 +374,80 @@
         "sample_draws": 20,
         "prob_pct": 25.0,
         "recent8": 3,
-        "since_wd": 0,
-        "score": 39.9,
-        "is_today": true,
-        "reason": "近20個星期六開出 5 次（25.0%），近8週同日出 3 次，已隔 0 週"
+        "since_wd": 1,
+        "score": 42.5,
+        "is_today": false,
+        "reason": "近20個星期六開出 5 次（25.0%），近8週同日出 3 次，已隔 1 週"
       }
     ]
   },
   "cycle_patterns": {
     "lag_3_to_5_rules": [
       {
+        "trigger": "14",
+        "trigger_date": "2026-11-11",
+        "lag": 4,
+        "target": "32",
+        "hits": 6,
+        "total": 13,
+        "probability": 0.4615,
+        "lift": 3.6
+      },
+      {
         "trigger": "19",
         "trigger_date": "2026-11-10",
-        "lag": 4,
-        "target": "12",
-        "hits": 8,
-        "total": 15,
-        "probability": 0.5333,
-        "lift": 4.16
-      },
-      {
-        "trigger": "34",
-        "trigger_date": "2026-11-10",
-        "lag": 4,
+        "lag": 5,
         "target": "30",
         "hits": 6,
-        "total": 14,
-        "probability": 0.4286,
-        "lift": 3.34
+        "total": 15,
+        "probability": 0.4,
+        "lift": 3.12
       },
       {
-        "trigger": "28",
-        "trigger_date": "2026-11-09",
-        "lag": 5,
-        "target": "23",
+        "trigger": "02",
+        "trigger_date": "2026-11-12",
+        "lag": 3,
+        "target": "30",
+        "hits": 6,
+        "total": 16,
+        "probability": 0.375,
+        "lift": 2.93
+      },
+      {
+        "trigger": "09",
+        "trigger_date": "2026-11-12",
+        "lag": 3,
+        "target": "38",
+        "hits": 5,
+        "total": 10,
+        "probability": 0.5,
+        "lift": 3.9
+      },
+      {
+        "trigger": "29",
+        "trigger_date": "2026-11-11",
+        "lag": 4,
+        "target": "30",
+        "hits": 5,
+        "total": 11,
+        "probability": 0.4545,
+        "lift": 3.55
+      },
+      {
+        "trigger": "32",
+        "trigger_date": "2026-11-11",
+        "lag": 4,
+        "target": "34",
         "hits": 5,
         "total": 13,
         "probability": 0.3846,
         "lift": 3.0
       },
       {
-        "trigger": "32",
-        "trigger_date": "2026-11-11",
-        "lag": 3,
-        "target": "12",
+        "trigger": "34",
+        "trigger_date": "2026-11-10",
+        "lag": 5,
+        "target": "08",
         "hits": 5,
         "total": 14,
         "probability": 0.3571,
@@ -424,82 +456,52 @@
       {
         "trigger": "34",
         "trigger_date": "2026-11-10",
-        "lag": 4,
-        "target": "34",
+        "lag": 5,
+        "target": "30",
         "hits": 5,
         "total": 14,
         "probability": 0.3571,
         "lift": 2.79
       },
       {
-        "trigger": "30",
-        "trigger_date": "2026-11-09",
+        "trigger": "19",
+        "trigger_date": "2026-11-10",
         "lag": 5,
-        "target": "19",
+        "target": "05",
         "hits": 5,
-        "total": 17,
-        "probability": 0.2941,
-        "lift": 2.29
-      },
-      {
-        "trigger": "30",
-        "trigger_date": "2026-11-09",
-        "lag": 5,
-        "target": "28",
-        "hits": 5,
-        "total": 17,
-        "probability": 0.2941,
-        "lift": 2.29
-      },
-      {
-        "trigger": "30",
-        "trigger_date": "2026-11-09",
-        "lag": 5,
-        "target": "13",
-        "hits": 5,
-        "total": 17,
-        "probability": 0.2941,
-        "lift": 2.29
+        "total": 15,
+        "probability": 0.3333,
+        "lift": 2.6
       },
       {
         "trigger": "30",
         "trigger_date": "2026-11-11",
-        "lag": 3,
-        "target": "19",
+        "lag": 4,
+        "target": "03",
         "hits": 5,
         "total": 18,
         "probability": 0.2778,
         "lift": 2.17
       },
       {
-        "trigger": "33",
-        "trigger_date": "2026-11-09",
-        "lag": 5,
-        "target": "24",
-        "hits": 4,
-        "total": 9,
-        "probability": 0.4444,
-        "lift": 3.47
+        "trigger": "30",
+        "trigger_date": "2026-11-11",
+        "lag": 4,
+        "target": "17",
+        "hits": 5,
+        "total": 18,
+        "probability": 0.2778,
+        "lift": 2.17
       },
       {
-        "trigger": "24",
-        "trigger_date": "2026-11-10",
-        "lag": 4,
-        "target": "11",
-        "hits": 4,
-        "total": 10,
-        "probability": 0.4,
-        "lift": 3.12
-      },
-      {
-        "trigger": "24",
-        "trigger_date": "2026-11-10",
-        "lag": 4,
-        "target": "08",
-        "hits": 4,
-        "total": 10,
-        "probability": 0.4,
-        "lift": 3.12
+        "trigger": "30",
+        "trigger_date": "2026-11-12",
+        "lag": 3,
+        "target": "19",
+        "hits": 5,
+        "total": 19,
+        "probability": 0.2632,
+        "lift": 2.05
       }
     ],
     "repeating_lead_pairs": [
@@ -548,6 +550,39 @@
         "hit_rate": 0.6
       },
       {
+        "lead": "30",
+        "active_now": true,
+        "pair": [
+          "06",
+          "39"
+        ],
+        "hits": 12,
+        "lead_occurrences": 20,
+        "hit_rate": 0.6
+      },
+      {
+        "lead": "30",
+        "active_now": true,
+        "pair": [
+          "32",
+          "39"
+        ],
+        "hits": 12,
+        "lead_occurrences": 20,
+        "hit_rate": 0.6
+      },
+      {
+        "lead": "02",
+        "active_now": true,
+        "pair": [
+          "08",
+          "30"
+        ],
+        "hits": 11,
+        "lead_occurrences": 17,
+        "hit_rate": 0.647
+      },
+      {
         "lead": "02",
         "active_now": true,
         "pair": [
@@ -573,49 +608,56 @@
         "lead": "30",
         "active_now": true,
         "pair": [
-          "34",
-          "39"
+          "06",
+          "17"
         ],
         "hits": 11,
         "lead_occurrences": 20,
         "hit_rate": 0.55
-      },
-      {
-        "lead": "02",
-        "active_now": true,
-        "pair": [
-          "05",
-          "30"
-        ],
-        "hits": 10,
-        "lead_occurrences": 17,
-        "hit_rate": 0.588
-      },
-      {
-        "lead": "02",
-        "active_now": true,
-        "pair": [
-          "08",
-          "10"
-        ],
-        "hits": 10,
-        "lead_occurrences": 17,
-        "hit_rate": 0.588
-      },
-      {
-        "lead": "02",
-        "active_now": true,
-        "pair": [
-          "08",
-          "30"
-        ],
-        "hits": 10,
-        "lead_occurrences": 17,
-        "hit_rate": 0.588
       }
     ]
   },
   "recent_graded_history": [
+    {
+      "draw_date": "2026-11-14",
+      "actual_numbers": [
+        "03",
+        "06",
+        "20",
+        "30",
+        "32"
+      ],
+      "predicted_recommended": [
+        "30",
+        "08",
+        "34",
+        "19",
+        "28",
+        "12",
+        "23"
+      ],
+      "predicted_solo": [
+        "30",
+        "08"
+      ],
+      "predicted_tudigong": "19",
+      "predicted_flames": [],
+      "tudigong_is_flame": false,
+      "hit_numbers": [
+        "30"
+      ],
+      "hit_count": 1,
+      "hit_categories": [
+        "獨支(30)",
+        "推薦7碼(30)"
+      ],
+      "tudigong_hit": false,
+      "predicted_weekday": "34",
+      "weekday_hit": false,
+      "predicted_tail": 8,
+      "tail_hit": false,
+      "tail_hit_nums": []
+    },
     {
       "draw_date": "2026-11-13",
       "actual_numbers": [
