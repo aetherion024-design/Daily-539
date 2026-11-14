@@ -331,6 +331,7 @@ class Rolling88Analyzer:
     def analyze_tail_and_big_small(self, top_rec_numbers: Sequence[int]) -> Dict[str, object]:
         n_draws = len(self.records)
         tail_counts = [0] * 10
+        tail_recent15 = [0] * 10
         tail_last_seen = [-1] * 10
         big_cnt = small_cnt = tie_cnt = sum_total = 0
 
@@ -339,6 +340,8 @@ class Rolling88Analyzer:
             for num in rec.numbers:
                 t = num % 10
                 tail_counts[t] += 1
+                if idx >= max(0, n_draws - 15):
+                    tail_recent15[t] += 1
                 tail_last_seen[t] = idx
                 sum_total += num
                 if num >= 21:
@@ -359,7 +362,8 @@ class Rolling88Analyzer:
         tail_list = []
         for t in range(10):
             omitted = (n_draws - 1 - tail_last_seen[t]) if tail_last_seen[t] != -1 else n_draws
-            score = round(tail_counts[t] * 1.2 + omitted * 3.5 + rec_bonus[t], 1)
+            omit_bonus = (min(omitted, 4) * 3.5) if omitted <= 4 else max(0.0, 14.0 - (omitted - 4) * 2.5)
+            score = round(tail_counts[t] * 0.9 + tail_recent15[t] * 2.5 + omit_bonus + rec_bonus[t], 1)
             nums = [f"{k:02d}" for k in range(10 if t == 0 else t, 40, 10)]
             tail_list.append({"tail": t, "count": tail_counts[t], "omitted": omitted, "score": score, "nums": nums})
         tail_list.sort(key=lambda x: x["score"], reverse=True)  # type: ignore[arg-type]
@@ -433,8 +437,33 @@ class Rolling88Analyzer:
             "weekly": picks,
         }
 
-    def generate_prediction(self, target_date: str, top_k: int = 7) -> Dict[str, object]:
-        solo = self.analyze_solo_numbers(top_n=2)
+    def generate_prediction(self, target_date: str, top_k: int = 7, apply_rotation: bool = True) -> Dict[str, object]:
+        rot_miss1: Set[int] = set()
+        rot_miss2: Set[int] = set()
+        if apply_rotation and len(self.all_records) >= self.window + 2:
+            prev1 = Rolling88Analyzer(self.all_records[:-1], window=self.window).generate_prediction(
+                self.all_records[-1].draw_date, top_k=top_k, apply_rotation=False
+            )
+            prev1_focus = {int(x) for x in prev1["recommended_numbers"][:3]} | {int(s["number"]) for s in prev1["solo_numbers"]}  # type: ignore[index]
+            last_actual = set(self.all_records[-1].numbers)
+            rot_miss1 = prev1_focus - last_actual
+
+            prev2 = Rolling88Analyzer(self.all_records[:-2], window=self.window).generate_prediction(
+                self.all_records[-2].draw_date, top_k=top_k, apply_rotation=False
+            )
+            prev2_focus = {int(x) for x in prev2["recommended_numbers"][:3]} | {int(s["number"]) for s in prev2["solo_numbers"]}  # type: ignore[index]
+            prev2_actual = set(self.all_records[-2].numbers)
+            rot_miss2 = rot_miss1 & (prev2_focus - prev2_actual)
+
+        solo_all = self.analyze_solo_numbers(top_n=8)
+        for _s in solo_all:
+            _num = int(_s["number"])  # type: ignore[arg-type]
+            if _num in rot_miss2:
+                _s["score"] = round(float(_s["score"]) - 38.0, 2)  # type: ignore[arg-type]
+            elif _num in rot_miss1:
+                _s["score"] = round(float(_s["score"]) - 22.0, 2)  # type: ignore[arg-type]
+        solo_all.sort(key=lambda x: x["score"], reverse=True)  # type: ignore[arg-type]
+        solo = solo_all[:2]
         cycles = self.analyze_cycle_rules(lag_min=3, lag_max=5)
         cold_info = self.analyze_coldest_and_icebreakers(top_n=5)
 
@@ -465,7 +494,8 @@ class Rolling88Analyzer:
         for n in range(1, 40):
             st = self.streak_map.get(n, 0)
             streak_mult = 1.0 if st == 0 else (0.92 if st == 1 else (0.65 if st == 2 else 0.25))
-            score = round(((0.45 * n_cy[n] + 0.30 * n_co[n] + 0.25 * n_so[n]) * 100) * streak_mult, 1)
+            rot_mult = 0.55 if n in rot_miss2 else (0.75 if n in rot_miss1 else 1.0)
+            score = round(((0.45 * n_cy[n] + 0.30 * n_co[n] + 0.25 * n_so[n]) * 100) * streak_mult * rot_mult, 1)
             active_signals = sum([n_cy[n] >= 0.4, n_co[n] >= 0.4, n_so[n] >= 0.4])
             # AI 火焰判定：綜合評分 >= 75 且至少 2 項訊號同時成立
             is_flame = score >= self.FLAME_SCORE_THRESHOLD and active_signals >= 2
