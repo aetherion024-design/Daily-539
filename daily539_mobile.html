@@ -324,6 +324,8 @@
                 <th class="py-3 px-2 font-bold">推薦主牌（紅圈為中）</th>
                 <th class="py-3 px-2 font-bold">獨支</th>
                 <th class="py-3 px-2 font-bold">五路財神</th>
+                <th class="py-3 px-2 font-bold">星期牌</th>
+                <th class="py-3 px-2 font-bold">尾數</th>
                 <th class="py-3 px-3 font-bold">命中結果</th>
               </tr>
             </thead>
@@ -1498,8 +1500,14 @@
       const tudi = pred.tudigong_number.formatted;
       const tudiActive = pred.tudigong_number.show !== false && tudi !== '--';
       const tudiHit = tudiActive && actualSet.has(tudi);
-      const allHits = [...new Set([...recHits, ...soloHits, ...(tudiHit ? [tudi] : [])])].sort();
+      const wdNum = (pred.weekday_picks && pred.weekday_picks.today_pick && pred.weekday_picks.today_pick.formatted) ? pred.weekday_picks.today_pick.formatted : '--';
+      const wdHit = wdNum !== '--' && actualSet.has(wdNum);
+      const predTail = (pred.tail_and_bs && pred.tail_and_bs.best_tail && pred.tail_and_bs.best_tail.tail !== undefined) ? pred.tail_and_bs.best_tail.tail : null;
+      const tailHitNums = predTail !== null ? actualDraw.numbers.filter(n => (n % 10) === Number(predTail)).map(pad2) : [];
+      const tailHit = tailHitNums.length > 0;
+      const allHits = [...new Set([...recHits, ...soloHits, ...(tudiHit ? [tudi] : []), ...(wdHit ? [wdNum] : [])])].sort();
       const cats = [];
+      if (wdHit) cats.push('星期牌');
       if (tudiHit) cats.push('五路財神牌');
       if (soloHits.length > 0) cats.push(`獨支(${soloHits.join(',')})`);
       if (recHits.length > 0) cats.push(`推薦${pred.recommended_numbers.length}碼(${recHits.join(',')})`);
@@ -1514,7 +1522,12 @@
         hit_numbers: allHits,
         hit_count: allHits.length,
         hit_categories: cats.length > 0 ? cats : ['未命中'],
-        tudigong_hit: tudiHit
+        tudigong_hit: tudiHit,
+        predicted_weekday: wdNum,
+        weekday_hit: wdHit,
+        predicted_tail: predTail,
+        tail_hit: tailHit,
+        tail_hit_nums: tailHitNums
       };
     }
 
@@ -1528,10 +1541,33 @@
         if (!prev) {
           const priorPred = generatePrediction(allDraws.slice(0, i), actual.draw_date, topK, 88);
           existing.set(actual.draw_date, gradePrediction(priorPred, actual));
-        } else if (prev.tudigong_is_flame === undefined && !Array.isArray(prev.predicted_flames)) {
-          const priorPred = generatePrediction(allDraws.slice(0, i), actual.draw_date, topK, 88);
-          prev.tudigong_is_flame = Boolean(priorPred.tudigong_number.isFlame);
-          prev.predicted_flames = priorPred.tudigong_number.isFlame ? [prev.predicted_tudigong] : [];
+        } else {
+          if (prev.tudigong_is_flame === undefined && !Array.isArray(prev.predicted_flames)) {
+            const priorPred = generatePrediction(allDraws.slice(0, i), actual.draw_date, topK, 88);
+            prev.tudigong_is_flame = Boolean(priorPred.tudigong_number.isFlame);
+            prev.predicted_flames = priorPred.tudigong_number.isFlame ? [prev.predicted_tudigong] : [];
+          }
+          if (!prev.predicted_weekday || prev.predicted_weekday === '--' || prev.predicted_tail === undefined || prev.predicted_tail === null) {
+            const priorPred = generatePrediction(allDraws.slice(0, i), actual.draw_date, topK, 88);
+            if (!prev.predicted_weekday || prev.predicted_weekday === '--') {
+              const wdPick = priorPred.weekday_picks && priorPred.weekday_picks.today_pick ? priorPred.weekday_picks.today_pick.formatted : '--';
+              prev.predicted_weekday = wdPick;
+              const actSet = new Set(actual.numbers.map(pad2));
+              prev.weekday_hit = wdPick !== '--' && actSet.has(wdPick);
+              if (prev.weekday_hit && Array.isArray(prev.hit_numbers) && !prev.hit_numbers.includes(wdPick)) {
+                prev.hit_numbers = [...prev.hit_numbers, wdPick].sort();
+                prev.hit_count = prev.hit_numbers.length;
+                prev.hit_categories = ['星期牌', ...(prev.hit_categories || []).filter(c => c !== '未命中')];
+              }
+            }
+            if (prev.predicted_tail === undefined || prev.predicted_tail === null) {
+              const pTail = priorPred.tail_and_bs && priorPred.tail_and_bs.best_tail ? priorPred.tail_and_bs.best_tail.tail : null;
+              prev.predicted_tail = pTail;
+              const tHits = pTail !== null ? actual.numbers.filter(n => (n % 10) === Number(pTail)).map(pad2) : [];
+              prev.tail_hit_nums = tHits;
+              prev.tail_hit = tHits.length > 0;
+            }
+          }
         }
       }
       const list = Array.from(existing.values()).sort((a, b) => b.draw_date.localeCompare(a.draw_date));
@@ -1596,7 +1632,7 @@
         document.getElementById('weekday-today-hero').innerHTML = `
           <span class="lotto-ball ${ballZoneClass(tp.formatted)}">${tp.formatted}</span>
           <div class="text-xs leading-relaxed">
-            <div class="font-extrabold text-cyan-200 text-sm">${tp.label}最有機會再出現號碼：${tp.formatted}</div>
+            <div class="font-extrabold text-cyan-200 text-sm">✨ ${tp.label} 幸運號碼 ✨：${tp.formatted}</div>
             <div class="text-slate-300 mt-0.5">${tp.reason}</div>
           </div>
         `;
@@ -1680,10 +1716,14 @@
       const anyHitDraws = gradedHistory.filter(g => g.hit_count > 0).length;
       const totalHitsSum = gradedHistory.reduce((acc, g) => acc + g.hit_count, 0);
       const tudiHitsSum = gradedHistory.filter(g => g.tudigong_hit).length;
+      const wdHitsSum = gradedHistory.filter(g => g.weekday_hit).length;
+      const tailHitsSum = gradedHistory.filter(g => g.tail_hit).length;
       document.getElementById('graded-summary-badges').innerHTML = `
         <span class="rounded-lg bg-slate-800 border border-slate-700 px-2.5 py-1 font-bold text-slate-200">近 ${totalGraded} 期</span>
         <span class="rounded-lg bg-rose-500/20 border border-rose-400/40 px-2.5 py-1 font-bold text-rose-200">有中：${anyHitDraws} 期（${totalHitsSum} 顆）</span>
         <span class="rounded-lg bg-amber-500/20 border border-amber-400/40 px-2.5 py-1 font-bold text-amber-200">五路財神：${tudiHitsSum} 次</span>
+        <span class="rounded-lg bg-cyan-500/20 border border-cyan-400/40 px-2.5 py-1 font-bold text-cyan-200">星期牌：${wdHitsSum} 次</span>
+        <span class="rounded-lg bg-emerald-500/20 border border-emerald-400/40 px-2.5 py-1 font-bold text-emerald-200">尾數：${tailHitsSum} 次</span>
       `;
 
       document.getElementById('graded-mobile-cards').innerHTML = gradedHistory.map((g, idx) => {
@@ -1717,6 +1757,14 @@
                   ${isTudiFlame ? '<span class="flame-mini-badge">🔥</span>' : ''}
                 </span>`}
               </div>
+              <div>
+                <div class="text-[11px] font-bold text-cyan-300 mb-1">星期牌</div>
+                ${!g.predicted_weekday || g.predicted_weekday === '--' ? '<span class="text-xs text-slate-500">-</span>' : `<span class="lotto-ball lotto-ball-sm ${ballZoneClass(g.predicted_weekday)} ${hitSet.has(g.predicted_weekday) ? 'hit-ring' : ''}">${g.predicted_weekday}</span>`}
+              </div>
+              <div>
+                <div class="text-[11px] font-bold text-amber-300 mb-1">尾數</div>
+                ${g.predicted_tail === undefined || g.predicted_tail === null ? '<span class="text-xs text-slate-500">-</span>' : (g.tail_hit ? `<span class="inline-block rounded-lg border-2 border-rose-500 bg-rose-500/20 px-2 py-1 text-[11px] font-extrabold text-rose-200">${g.predicted_tail}尾 中(${(g.tail_hit_nums || []).join(',')})</span>` : `<span class="inline-block rounded-lg bg-slate-800 px-2 py-1 text-[11px] font-bold text-slate-400">${g.predicted_tail}尾 未中</span>`)}
+              </div>
             </div>
           </div>
         `;
@@ -1732,6 +1780,8 @@
             <td class="py-3 px-2"><div class="flex flex-wrap gap-1.5">${g.predicted_recommended.map(n => `<span class="lotto-ball lotto-ball-sm ${ballZoneClass(n)} ${hitSet.has(n) ? 'hit-ring' : ''}">${n}</span>`).join('')}</div></td>
             <td class="py-3 px-2"><div class="flex gap-1.5">${g.predicted_solo.map(n => `<span class="lotto-ball lotto-ball-sm ball-purple ${hitSet.has(n) ? 'hit-ring' : ''}">${n}</span>`).join('')}</div></td>
             <td class="py-3 px-2">${g.predicted_tudigong === '--' ? '<span class="rounded bg-slate-800 px-2 py-1 text-xs font-bold text-slate-400">休息</span>' : `<span class="relative inline-flex"><span class="lotto-ball lotto-ball-sm ball-red-luck ${isTudiFlame ? 'ball-flame-ring' : ''} ${hitSet.has(g.predicted_tudigong) ? 'hit-ring' : ''}">${g.predicted_tudigong}</span>${isTudiFlame ? '<span class="flame-mini-badge">🔥</span>' : ''}</span>`}</td>
+            <td class="py-3 px-2">${!g.predicted_weekday || g.predicted_weekday === '--' ? '<span class="text-slate-500">-</span>' : `<span class="lotto-ball lotto-ball-sm ${ballZoneClass(g.predicted_weekday)} ${hitSet.has(g.predicted_weekday) ? 'hit-ring' : ''}">${g.predicted_weekday}</span>`}</td>
+            <td class="py-3 px-2 whitespace-nowrap">${g.predicted_tail === undefined || g.predicted_tail === null ? '<span class="text-slate-500">-</span>' : (g.tail_hit ? `<span class="inline-block rounded-lg border-2 border-rose-500 bg-rose-500/20 px-2 py-1 text-xs font-extrabold text-rose-200">${g.predicted_tail}尾 中(${(g.tail_hit_nums || []).join(',')})</span>` : `<span class="inline-block rounded-lg bg-slate-800 px-2 py-1 text-xs font-bold text-slate-400">${g.predicted_tail}尾 未中</span>`)}</td>
             <td class="py-3 px-3">${g.hit_count > 0 ? `<span class="inline-block rounded-lg bg-rose-500/25 border border-rose-400/50 px-2.5 py-1 font-extrabold text-rose-200">中 ${g.hit_count} 顆：${g.hit_categories.join(' + ')}</span>` : '<span class="text-slate-500">未命中</span>'}</td>
           </tr>
         `;

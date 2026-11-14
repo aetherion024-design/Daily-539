@@ -579,9 +579,18 @@ def grade_prediction(pred: Dict[str, object], actual: DrawRecord) -> Dict[str, o
     tudi = pred["tudigong_number"]["formatted"]  # type: ignore[index]
     tudi_active = bool(pred["tudigong_number"].get("show", True)) and tudi != "--"  # type: ignore[index]
     tudi_hit = tudi_active and (tudi in actual_set)
+    wd_pick = (pred.get("weekday_picks", {}) or {}).get("today_pick", {}) or {}  # type: ignore[call-overload]
+    wd_num = str(wd_pick.get("formatted", "--"))
+    wd_hit = wd_num != "--" and (wd_num in actual_set)
+    best_tail_obj = (pred.get("tail_and_bs", {}) or {}).get("best_tail", {}) or {}  # type: ignore[call-overload]
+    pred_tail = best_tail_obj.get("tail", None)
+    tail_hit_nums = sorted([f"{n:02d}" for n in actual.numbers if pred_tail is not None and (n % 10) == int(pred_tail)])
+    tail_hit = len(tail_hit_nums) > 0
 
-    all_hits = sorted(set(rec_hits + solo_hits + ([tudi] if tudi_hit else [])))
+    all_hits = sorted(set(rec_hits + solo_hits + ([tudi] if tudi_hit else []) + ([wd_num] if wd_hit else [])))
     categories = []
+    if wd_hit:
+        categories.append("星期牌")
     if tudi_hit:
         categories.append("五路財神牌")
     if solo_hits:
@@ -601,6 +610,11 @@ def grade_prediction(pred: Dict[str, object], actual: DrawRecord) -> Dict[str, o
         "hit_count": len(all_hits),
         "hit_categories": categories if categories else ["未命中"],
         "tudigong_hit": tudi_hit,
+        "predicted_weekday": wd_num,
+        "weekday_hit": wd_hit,
+        "predicted_tail": pred_tail,
+        "tail_hit": tail_hit,
+        "tail_hit_nums": tail_hit_nums,
     }
 
 
