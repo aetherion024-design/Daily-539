@@ -31,7 +31,12 @@
     "hit_categories": [
       "推薦7碼(17)"
     ],
-    "tudigong_hit": false
+    "tudigong_hit": false,
+    "predicted_weekday": "25",
+    "weekday_hit": false,
+    "predicted_tail": 2,
+    "tail_hit": false,
+    "tail_hit_nums": []
   },
   {
     "draw_date": "2026-11-12",
@@ -66,7 +71,12 @@
       "獨支(02)",
       "推薦7碼(02,30)"
     ],
-    "tudigong_hit": false
+    "tudigong_hit": false,
+    "predicted_weekday": "34",
+    "weekday_hit": false,
+    "predicted_tail": 4,
+    "tail_hit": false,
+    "tail_hit_nums": []
   },
   {
     "draw_date": "2026-11-11",
@@ -101,7 +111,14 @@
       "獨支(30)",
       "推薦7碼(30,32)"
     ],
-    "tudigong_hit": false
+    "tudigong_hit": false,
+    "predicted_weekday": "14",
+    "weekday_hit": true,
+    "predicted_tail": 2,
+    "tail_hit": true,
+    "tail_hit_nums": [
+      "32"
+    ]
   },
   {
     "draw_date": "2026-11-10",
@@ -134,7 +151,12 @@
     "hit_categories": [
       "推薦7碼(34)"
     ],
-    "tudigong_hit": false
+    "tudigong_hit": false,
+    "predicted_weekday": "30",
+    "weekday_hit": false,
+    "predicted_tail": 8,
+    "tail_hit": false,
+    "tail_hit_nums": []
   },
   {
     "draw_date": "2026-11-09",
@@ -169,7 +191,12 @@
       "獨支(30)",
       "推薦7碼(30,07)"
     ],
-    "tudigong_hit": false
+    "tudigong_hit": false,
+    "predicted_weekday": "35",
+    "weekday_hit": false,
+    "predicted_tail": 2,
+    "tail_hit": false,
+    "tail_hit_nums": []
   },
   {
     "draw_date": "2026-11-07",
@@ -202,7 +229,14 @@
     "hit_categories": [
       "推薦7碼(32)"
     ],
-    "tudigong_hit": false
+    "tudigong_hit": false,
+    "predicted_weekday": "17",
+    "weekday_hit": false,
+    "predicted_tail": 2,
+    "tail_hit": true,
+    "tail_hit_nums": [
+      "32"
+    ]
   },
   {
     "draw_date": "2026-11-06",
@@ -235,7 +269,12 @@
     "hit_categories": [
       "推薦7碼(14)"
     ],
-    "tudigong_hit": false
+    "tudigong_hit": false,
+    "predicted_weekday": "12",
+    "weekday_hit": false,
+    "predicted_tail": 8,
+    "tail_hit": false,
+    "tail_hit_nums": []
   },
   {
     "draw_date": "2026-11-05",
@@ -269,7 +308,14 @@
       "獨支(32)",
       "推薦7碼(32)"
     ],
-    "tudigong_hit": false
+    "tudigong_hit": false,
+    "predicted_weekday": "14",
+    "weekday_hit": false,
+    "predicted_tail": 8,
+    "tail_hit": true,
+    "tail_hit_nums": [
+      "28"
+    ]
   },
   {
     "draw_date": "2026-11-04",
@@ -302,7 +348,12 @@
     "hit_categories": [
       "推薦7碼(08)"
     ],
-    "tudigong_hit": false
+    "tudigong_hit": false,
+    "predicted_weekday": "19",
+    "weekday_hit": false,
+    "predicted_tail": 7,
+    "tail_hit": false,
+    "tail_hit_nums": []
   },
   {
     "draw_date": "2026-11-03",
@@ -335,7 +386,14 @@
     "hit_categories": [
       "推薦7碼(30)"
     ],
-    "tudigong_hit": false
+    "tudigong_hit": false,
+    "predicted_weekday": "23",
+    "weekday_hit": false,
+    "predicted_tail": 5,
+    "tail_hit": true,
+    "tail_hit_nums": [
+      "05"
+    ]
   },
   {
     "draw_date": "2026-11-02",
@@ -367,10 +425,15 @@
     ],
     "hit_count": 2,
     "hit_categories": [
-      "土地公牌",
+      "五路財神牌",
       "推薦7碼(29)"
     ],
-    "tudigong_hit": true
+    "tudigong_hit": true,
+    "predicted_weekday": "19",
+    "weekday_hit": false,
+    "predicted_tail": 2,
+    "tail_hit": false,
+    "tail_hit_nums": []
   },
   {
     "draw_date": "2026-10-31",
@@ -401,7 +464,14 @@
     "hit_categories": [
       "未命中"
     ],
-    "tudigong_hit": false
+    "tudigong_hit": false,
+    "predicted_weekday": "17",
+    "weekday_hit": true,
+    "predicted_tail": 5,
+    "tail_hit": true,
+    "tail_hit_nums": [
+      "05"
+    ]
   },
   {
     "draw_date": "2026-10-30",
@@ -434,7 +504,14 @@
     "hit_categories": [
       "推薦7碼(12)"
     ],
-    "tudigong_hit": false
+    "tudigong_hit": false,
+    "predicted_weekday": "15",
+    "weekday_hit": false,
+    "predicted_tail": 2,
+    "tail_hit": true,
+    "tail_hit_nums": [
+      "12"
+    ]
   },
   {
     "draw_date": "2026-10-29",
@@ -465,7 +542,12 @@
     "hit_categories": [
       "未命中"
     ],
-    "tudigong_hit": false
+    "tudigong_hit": false,
+    "predicted_weekday": "08",
+    "weekday_hit": false,
+    "predicted_tail": 5,
+    "tail_hit": false,
+    "tail_hit_nums": []
   },
   {
     "draw_date": "2026-10-28",
@@ -502,7 +584,12 @@
       "獨支(19)",
       "推薦7碼(19,13,35,06)"
     ],
-    "tudigong_hit": false
+    "tudigong_hit": false,
+    "predicted_weekday": "08",
+    "weekday_hit": false,
+    "predicted_tail": 8,
+    "tail_hit": false,
+    "tail_hit_nums": []
   },
   {
     "draw_date": "2026-10-27",
@@ -534,10 +621,15 @@
     ],
     "hit_count": 2,
     "hit_categories": [
-      "土地公牌",
+      "五路財神牌",
       "推薦7碼(06)"
     ],
-    "tudigong_hit": true
+    "tudigong_hit": true,
+    "predicted_weekday": "30",
+    "weekday_hit": false,
+    "predicted_tail": 4,
+    "tail_hit": false,
+    "tail_hit_nums": []
   },
   {
     "draw_date": "2026-10-26",
@@ -571,7 +663,14 @@
       "獨支(35)",
       "推薦7碼(35)"
     ],
-    "tudigong_hit": false
+    "tudigong_hit": false,
+    "predicted_weekday": "16",
+    "weekday_hit": false,
+    "predicted_tail": 3,
+    "tail_hit": true,
+    "tail_hit_nums": [
+      "13"
+    ]
   },
   {
     "draw_date": "2026-10-24",
@@ -602,7 +701,12 @@
     "hit_categories": [
       "未命中"
     ],
-    "tudigong_hit": false
+    "tudigong_hit": false,
+    "predicted_weekday": "06",
+    "weekday_hit": false,
+    "predicted_tail": 2,
+    "tail_hit": false,
+    "tail_hit_nums": []
   },
   {
     "draw_date": "2026-10-23",
@@ -633,7 +737,12 @@
     "hit_categories": [
       "未命中"
     ],
-    "tudigong_hit": false
+    "tudigong_hit": false,
+    "predicted_weekday": "25",
+    "weekday_hit": false,
+    "predicted_tail": 2,
+    "tail_hit": false,
+    "tail_hit_nums": []
   },
   {
     "draw_date": "2026-10-22",
@@ -668,7 +777,15 @@
       "獨支(08)",
       "推薦7碼(23)"
     ],
-    "tudigong_hit": false
+    "tudigong_hit": false,
+    "predicted_weekday": "30",
+    "weekday_hit": false,
+    "predicted_tail": 3,
+    "tail_hit": true,
+    "tail_hit_nums": [
+      "03",
+      "23"
+    ]
   },
   {
     "draw_date": "2026-10-21",
@@ -701,6 +818,13 @@
     "hit_categories": [
       "推薦7碼(04)"
     ],
-    "tudigong_hit": false
+    "tudigong_hit": false,
+    "predicted_weekday": "19",
+    "weekday_hit": false,
+    "predicted_tail": 5,
+    "tail_hit": true,
+    "tail_hit_nums": [
+      "15"
+    ]
   }
 ]
