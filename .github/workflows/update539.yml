@@ -2,10 +2,11 @@ name: Auto Update 539
 
 on:
   schedule:
-    # 台灣時間 (UTC+8) 週一至週六 21:08 與 21:43 自動執行（第一班搶先更新，第二班補抓保險）
-    - cron: '08 13 * * 1-6'
-    - cron: '43 13 * * 1-6'
-  workflow_dispatch: # 支援隨時手動點按鈕測試
+    # 台灣時間 (UTC+8) 週一至週六：20:45、21:00、21:20（由下方節日條件式自動決定是否執行）
+    - cron: '45 12 * * 1-6'
+    - cron: '0 13 * * 1-6'
+    - cron: '20 13 * * 1-6'
+  workflow_dispatch: # 支援隨時手動點按鈕測試（不受時段限制）
 
 permissions:
   contents: write
@@ -14,18 +15,91 @@ jobs:
   update:
     runs-on: ubuntu-latest
     steps:
+      - name: 檢查一般日／特殊節日排程時段（2026–2040 農曆表）
+        id: check_slot
+        shell: python3 {0}
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          SCHEDULE_CRON: ${{ github.event.schedule }}
+        run: |
+          import datetime as dt
+          import os
+
+          tz_tw = dt.timezone(dt.timedelta(hours=8))
+          today = dt.datetime.now(tz_tw).date()
+          event_name = os.environ.get("EVENT_NAME", "")
+          cron_expr = os.environ.get("SCHEDULE_CRON", "")
+
+          # 2026–2040 農曆除夕、端午(五月初五)、中秋(八月十五) 國曆日期
+          # 註：除夕為正月初一的前一天
+          FESTIVALS = {
+              2026: ("2026-02-16", "2026-06-19", "2026-09-25"),
+              2027: ("2027-02-05", "2027-06-09", "2027-09-15"),
+              2028: ("2028-01-25", "2028-05-28", "2028-10-03"),
+              2029: ("2029-02-12", "2029-06-16", "2029-09-22"),
+              2030: ("2030-02-02", "2030-06-05", "2030-09-12"),
+              2031: ("2031-01-22", "2031-06-24", "2031-10-01"),
+              2032: ("2032-02-10", "2032-06-12", "2032-09-19"),
+              2033: ("2033-01-30", "2033-06-01", "2033-09-08"),
+              2034: ("2034-02-18", "2034-06-20", "2034-09-27"),
+              2035: ("2035-02-07", "2035-06-10", "2035-09-16"),
+              2036: ("2036-01-27", "2036-05-30", "2036-10-04"),
+              2037: ("2037-02-14", "2037-06-18", "2037-09-24"),
+              2038: ("2038-02-03", "2038-06-07", "2038-09-13"),
+              2039: ("2039-01-23", "2039-06-27", "2039-10-02"),
+              2040: ("2040-02-11", "2040-06-14", "2040-09-20"),
+          }
+
+          windows = [
+              # (欄位索引, 節日名稱, 往前天數, 往後天數)
+              (0, "過年加碼期(除夕基準)", 5, 16),
+              (1, "端午加碼期(端午基準)", 15, 29),
+              (2, "中秋加碼期(中秋基準)", 11, 29),
+          ]
+
+          special_name = ""
+          for yr in (today.year - 1, today.year, today.year + 1):
+              if yr not in FESTIVALS:
+                  continue
+              dates = FESTIVALS[yr]
+              for idx, label, before_d, after_d in windows:
+                  base = dt.date.fromisoformat(dates[idx])
+                  if (base - dt.timedelta(days=before_d)) <= today <= (base + dt.timedelta(days=after_d)):
+                      special_name = f"{yr} {label}"
+                      break
+              if special_name:
+                  break
+
+          if event_name == "workflow_dispatch":
+              should_run = True
+              reason = "手動觸發立即執行"
+          elif special_name:
+              should_run = cron_expr in ("0 13 * * 1-6", "20 13 * * 1-6")
+              reason = f"特殊節日({special_name})：僅在 21:00 / 21:20 執行（本次 cron={cron_expr}）"
+          else:
+              should_run = cron_expr in ("45 12 * * 1-6", "0 13 * * 1-6")
+              reason = f"一般日：僅在 20:45 / 21:00 執行（本次 cron={cron_expr}）"
+
+          print(f"台灣日期={today.isoformat()} | should_run={should_run} | {reason}")
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as f:
+              f.write(f"should_run={'true' if should_run else 'false'}\n")
+
       - name: 取得最新程式碼
+        if: steps.check_slot.outputs.should_run == 'true'
         uses: actions/checkout@v4
 
       - name: 設定 Python 3.11
+        if: steps.check_slot.outputs.should_run == 'true'
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
       - name: 抓取最新 539 開獎並重算對獎與推薦
+        if: steps.check_slot.outputs.should_run == 'true'
         run: python3 daily539_predictor.py --update --top 7
 
       - name: 自動儲存並推回 GitHub Pages
+        if: steps.check_slot.outputs.should_run == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
