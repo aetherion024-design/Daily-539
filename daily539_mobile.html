@@ -1303,7 +1303,7 @@
       };
     }
 
-    function analyzeWeekdayPicks(allRecords, targetDate, streakMap, perWdLimit = 20) {
+    function analyzeWeekdayPicks(allRecords, targetDate, streakMap, rankedMap = {}, perWdLimit = 20) {
       const wdNames = ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
       const dObj = new Date(targetDate + 'T00:00:00+08:00');
       const jsDay = dObj.getDay();
@@ -1315,36 +1315,53 @@
         const wd = gd === 0 ? 6 : gd - 1;
         if (wd >= 0 && wd < 6) byWd[wd].push(rec);
       }
+      function baseWdScore(subList, num) {
+        const mLen = subList.length;
+        const pos = [];
+        for (let i = 0; i < mLen; i++) if (subList[i].numbers.includes(num)) pos.push(i);
+        const hits = pos.length;
+        const recent8 = pos.filter(p => p >= Math.max(0, mLen - 8)).length;
+        const sinceWd = pos.length ? (mLen - 1 - pos[pos.length - 1]) : mLen;
+        const avgGap = hits > 0 ? mLen / hits : mLen;
+        const cycleBonus = (hits >= 2 && Math.abs(sinceWd - avgGap) <= 1.2) ? 8.0 : 0.0;
+        return { base: hits * 4.2 + recent8 * 6.5 + cycleBonus, hits, recent8, sinceWd };
+      }
       const picks = [];
       for (let wd = 0; wd < 6; wd++) {
         const sub = byWd[wd].slice(-perWdLimit);
         const mDraws = sub.length;
+        let lastWdMissNum = -1;
+        if (mDraws >= 4) {
+          const prevSub = sub.slice(0, -1);
+          let prevBestN = 1, prevBestSc = -1;
+          for (let k = 1; k <= 39; k++) {
+            const s = baseWdScore(prevSub, k).base;
+            if (s > prevBestSc) { prevBestSc = s; prevBestN = k; }
+          }
+          if (!sub[mDraws - 1].numbers.includes(prevBestN)) lastWdMissNum = prevBestN;
+        }
         let best = null;
         for (let num = 1; num <= 39; num++) {
-          const pos = [];
-          for (let i = 0; i < mDraws; i++) if (sub[i].numbers.includes(num)) pos.push(i);
-          const hits = pos.length;
-          const recent8 = pos.filter(p => p >= Math.max(0, mDraws - 8)).length;
-          const sinceWd = pos.length ? (mDraws - 1 - pos[pos.length - 1]) : mDraws;
-          const avgGap = hits > 0 ? mDraws / hits : mDraws;
-          const cycleBonus = (hits >= 2 && Math.abs(sinceWd - avgGap) <= 1.2) ? 8.0 : 0.0;
+          const info = baseWdScore(sub, num);
           const st = streakMap[num] || 0;
           const stMult = st === 0 ? 1.0 : (st === 1 ? 0.92 : (st === 2 ? 0.65 : 0.25));
-          const rawScore = Number(((hits * 4.2 + recent8 * 6.5 + cycleBonus) * stMult).toFixed(1));
-          const probPct = mDraws > 0 ? Number(((hits / mDraws) * 100).toFixed(1)) : 0;
+          const rotWdMult = num === lastWdMissNum ? 0.70 : 1.0;
+          const trendPart = (rankedMap[num] || 0) * 0.35;
+          const rawScore = Number((((info.base * 0.65) + trendPart) * stMult * rotWdMult).toFixed(1));
+          const probPct = mDraws > 0 ? Number(((info.hits / mDraws) * 100).toFixed(1)) : 0;
           const cand = {
             weekday: wd,
             label: wdNames[wd],
             number: num,
             formatted: pad2(num),
-            hits,
+            hits: info.hits,
             sample_draws: mDraws,
             prob_pct: probPct,
-            recent8,
-            since_wd: sinceWd,
+            recent8: info.recent8,
+            since_wd: info.sinceWd,
             score: rawScore,
             is_today: wd === targetWd,
-            reason: `近${mDraws}個${wdNames[wd]}開出 ${hits} 次（${probPct}%），近8週同日出 ${recent8} 次，已隔 ${sinceWd} 週`
+            reason: `近${mDraws}個${wdNames[wd]}開出 ${info.hits} 次（${probPct}%），近8週同日出 ${info.recent8} 次，已隔 ${info.sinceWd} 週`
           };
           if (!best || cand.score > best.score || (cand.score === best.score && cand.recent8 > best.recent8) || (cand.score === best.score && cand.recent8 === best.recent8 && cand.hits > best.hits)) {
             best = cand;
@@ -1486,7 +1503,7 @@
         solo_numbers: solo,
         tudigong_number: tudigong,
         tail_and_bs: analyzeTailAndBigSmall(records88, topRecs.map(r => r.number)),
-        weekday_picks: analyzeWeekdayPicks(allRecords, targetDate, (() => { const m = {}; for (let num=1; num<=39; num++) { let st=0; for (let i=records88.length-1; i>=0; i--) { if (records88[i].numbers.includes(num)) st++; else break; } m[num]=st; } return m; })()),
+        weekday_picks: analyzeWeekdayPicks(allRecords, targetDate, (() => { const m = {}; for (let num=1; num<=39; num++) { let st=0; for (let i=records88.length-1; i>=0; i--) { if (records88[i].numbers.includes(num)) st++; else break; } m[num]=st; } return m; })(), Object.fromEntries(ranked.map(r => [r.number, r.score]))),
         cold_tracking: coldInfo,
         lead_pairs: cycles.leadPairs
       };

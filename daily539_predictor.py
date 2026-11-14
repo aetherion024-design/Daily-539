@@ -382,8 +382,13 @@ class Rolling88Analyzer:
             },
         }
 
-    def analyze_weekday_picks(self, target_date: str, per_weekday_limit: int = 20) -> Dict[str, object]:
-        """依星期一～星期六各別統計最近 20 個同星期幾的開獎機率，為每天挑出 1 顆最有機會再出現的號碼。"""
+    def analyze_weekday_picks(
+        self,
+        target_date: str,
+        per_weekday_limit: int = 20,
+        ranked_scores: Optional[Dict[int, float]] = None,
+    ) -> Dict[str, object]:
+        """依星期一～星期六各別統計最近 20 個同星期幾機率 (65%) + 當下盤勢 (35%) + 上週同日未開輪休。"""
         wd_names = ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六"]
         target_wd = dt.date.fromisoformat(target_date).weekday()
         by_wd: Dict[int, List[DrawRecord]] = defaultdict(list)
@@ -392,21 +397,36 @@ class Rolling88Analyzer:
             if wd < 6:
                 by_wd[wd].append(rec)
 
+        def _base_wd_score(sub_list: Sequence[DrawRecord], num: int) -> Tuple[float, int, int, int]:
+            m_len = len(sub_list)
+            pos = [i for i, r in enumerate(sub_list) if num in r.numbers]
+            hits = len(pos)
+            recent8 = sum(1 for p in pos if p >= max(0, m_len - 8))
+            since_wd = (m_len - 1 - pos[-1]) if pos else m_len
+            avg_gap = (m_len / hits) if hits > 0 else float(m_len)
+            cycle_bonus = 8.0 if (hits >= 2 and abs(since_wd - avg_gap) <= 1.2) else 0.0
+            return (hits * 4.2 + recent8 * 6.5 + cycle_bonus), hits, recent8, since_wd
+
         picks = []
         for wd in range(6):
             sub = by_wd[wd][-per_weekday_limit:]
             m_draws = len(sub)
+            # 檢查上週同日第一名是否未開，若未開則本週輪休打 0.7 折
+            last_wd_miss_num = -1
+            if m_draws >= 4:
+                prev_sub = sub[:-1]
+                prev_best_n = max(range(1, 40), key=lambda k: _base_wd_score(prev_sub, k)[0])
+                if prev_best_n not in sub[-1].numbers:
+                    last_wd_miss_num = prev_best_n
+
             best_item = None
             for num in range(1, 40):
-                pos = [i for i, r in enumerate(sub) if num in r.numbers]
-                hits = len(pos)
-                recent8 = sum(1 for p in pos if p >= max(0, m_draws - 8))
-                since_wd = (m_draws - 1 - pos[-1]) if pos else m_draws
-                avg_gap = (m_draws / hits) if hits > 0 else float(m_draws)
-                cycle_bonus = 8.0 if (hits >= 2 and abs(since_wd - avg_gap) <= 1.2) else 0.0
+                wd_base, hits, recent8, since_wd = _base_wd_score(sub, num)
                 st = self.streak_map.get(num, 0)
                 st_mult = 1.0 if st == 0 else (0.92 if st == 1 else (0.65 if st == 2 else 0.25))
-                raw_score = (hits * 4.2 + recent8 * 6.5 + cycle_bonus) * st_mult
+                rot_wd_mult = 0.70 if num == last_wd_miss_num else 1.0
+                trend_part = (ranked_scores.get(num, 0.0) if ranked_scores else 0.0) * 0.35
+                raw_score = (wd_base * 0.65 + trend_part) * st_mult * rot_wd_mult
                 prob_pct = round((hits / m_draws) * 100, 1) if m_draws > 0 else 0.0
                 cand = {
                     "weekday": wd,
@@ -563,7 +583,7 @@ class Rolling88Analyzer:
             "tudigong_number": tudigong,
             "tail_and_bs": self.analyze_tail_and_big_small([r["number"] for r in top_recs]),
             "cold_tracking": cold_info,
-            "weekday_picks": self.analyze_weekday_picks(target_date),
+            "weekday_picks": self.analyze_weekday_picks(target_date, ranked_scores={int(r["number"]): float(r["score"]) for r in ranked}),
             "cycle_patterns": {
                 "lag_3_to_5_rules": cycles["lag_3_to_5_rules"],
                 "repeating_lead_pairs": cycles["repeating_lead_pairs"],
