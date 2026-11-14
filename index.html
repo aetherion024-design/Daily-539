@@ -173,8 +173,6 @@
           <div id="latest-balls" class="mt-4 grid grid-cols-5 gap-1.5 justify-items-center"></div>
           <div class="mt-4 border-t border-slate-800 pt-3 space-y-1.5 text-xs text-slate-400">
             <div class="flex justify-between"><span>歷史總期數</span><span id="stat-total-draws" class="font-bold text-white">-</span></div>
-            <div class="flex justify-between"><span>滾動分析基準</span><span class="font-bold text-amber-400">往前 88 期</span></div>
-            <div class="flex justify-between"><span>預測目標日</span><span id="stat-target-date" class="font-bold text-white">-</span></div>
           </div>
         </div>
 
@@ -1634,7 +1632,6 @@
       document.getElementById('dataset-subtitle').textContent = `已載入 ${draws.length} 期（${draws[0].draw_date} ～ ${latest.draw_date}）`;
       document.getElementById('latest-date').textContent = formatDateWithWeekday(latest.draw_date);
       document.getElementById('stat-total-draws').textContent = `${draws.length} 期`;
-      document.getElementById('stat-target-date').textContent = formatDateWithWeekday(targetDate);
       document.getElementById('rec-target-date').textContent = `預測目標日：${formatDateWithWeekday(targetDate)}`;
       document.getElementById('latest-balls').innerHTML = latest.numbers.map(n => `<span class="lotto-ball lotto-ball-latest ${ballZoneClass(n)}">${pad2(n)}</span>`).join('');
 
