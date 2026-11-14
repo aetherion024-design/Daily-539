@@ -1,15 +1,15 @@
 """
-今彩539 每日自動更新與多維度抓牌推薦系統 (36期滾動 + 冷門破冰 + 火焰高機率判定版)
+今彩539 每日自動更新與多維度抓牌推薦系統 (88期滾動 + 冷門破冰 + 火焰高機率判定版)
 ====================================================================================
 功能：
 1. 自動抓取與合併歷史資料（114 年至今，並支援每日 21:35 自動更新）。
-2. 以最新一期往前滾動「36 期」為基準，產出：
+2. 以最新一期往前滾動「88 期」為基準，產出：
    - 每日推薦固定 7 碼（綜合權重排序）
-   - 獨支 1～2 支（單支在 36 期內固定間隔週期出現頻率最高者）
+   - 獨支 1～2 支（單支在 88 期內固定間隔週期出現頻率最高者）
    - 週期規律牌組（隔 3～5 期拖牌 + 前導號帶出固定雙星）
    - 每日五路財神幸運號碼 1 碼（嚴格排除推薦主牌與獨支後挑選，不重複）
    - AI 高機率火焰框判定（僅當系統判定綜合機率達高標門檻時標記火焰框，否則不標記）
-   - 近 36 期最久未開 Top 5 冷門追蹤，若開出則自動移出並記錄「幾期沒開、於哪天開出」
+   - 近 88 期最久未開 Top 5 冷門追蹤，若開出則自動移出並記錄「幾期沒開、於哪天開出」
 3. 自動對獎與紀錄留存（標註五路財神／獨支／推薦 7 碼命中顆數）。
 """
 
@@ -115,7 +115,7 @@ class Rolling88Analyzer:
     BASELINE_PROB = 5.0 / 39.0
     FLAME_SCORE_THRESHOLD = 75.0
 
-    def __init__(self, all_records: Sequence[DrawRecord], window: int = 36):
+    def __init__(self, all_records: Sequence[DrawRecord], window: int = 88):
         self.all_records = deduplicate_and_sort(all_records)
         if len(self.all_records) < 15:
             raise ValueError("歷史開獎期數過少，至少需要 15 期以上。")
@@ -132,7 +132,7 @@ class Rolling88Analyzer:
             self.streak_map[_n] = _st
 
     def analyze_coldest_and_icebreakers(self, top_n: int = 5) -> Dict[str, object]:
-        """統計近 36 期最久未開前 5 碼，並追蹤近期從該榜單破冰開出的號碼。"""
+        """統計近 88 期最久未開前 5 碼，並追蹤近期從該榜單破冰開出的號碼。"""
         n_draws = len(self.records)
         cold_list = []
         for num in range(1, 40):
@@ -166,7 +166,7 @@ class Rolling88Analyzer:
             prev_win = self.all_records[max(0, idx - self.window) : idx]
             if not prev_win:
                 continue
-            # 計算開獎前這 36 期的遺漏排行
+            # 計算開獎前這 88 期的遺漏排行
             prev_omitted = {}
             for num in range(1, 40):
                 lp = -1
@@ -197,7 +197,7 @@ class Rolling88Analyzer:
         for num in range(1, 40):
             positions = [idx for idx, rec in enumerate(self.records) if num in rec.numbers]
             freq = len(positions)
-            if freq < 3:
+            if freq < 4:
                 continue
             gaps = [positions[i] - positions[i - 1] for i in range(1, len(positions))]
             best_gap, best_gap_hits = Counter(gaps).most_common(1)[0]
@@ -205,7 +205,7 @@ class Rolling88Analyzer:
             if st >= 3:
                 continue  # 連開 3 期以上不以獨支拚連 4
             draws_since_last = (total - 1) - positions[-1]
-            recent_30 = sum(1 for p in positions if p >= max(0, total - 15))
+            recent_30 = sum(1 for p in positions if p >= max(0, total - 30))
             if draws_since_last + 1 == best_gap:
                 cycle_match_bonus = 45.0
             elif abs((draws_since_last + 1) - best_gap) <= 1:
@@ -251,7 +251,7 @@ class Rolling88Analyzer:
                         follow_cnt[a][b] += 1
             for a in triggers:
                 tot = trig_total[a]
-                if tot < 2:
+                if tot < 3:
                     continue
                 for b, cnt in follow_cnt[a].most_common(3):
                     prob = cnt / tot
@@ -325,7 +325,7 @@ class Rolling88Analyzer:
             "formatted": f"{pick:02d}",
             "target_date": target_date,
             "freq_in_88": freq[pick],
-            "note": f"已排除推薦主牌與獨支，依 {target_date} 五路財神吉數定號（近36期開 {freq[pick]} 次）",
+            "note": f"已排除推薦主牌與獨支，依 {target_date} 五路財神吉數定號（近88期開 {freq[pick]} 次）",
         }
 
     def analyze_tail_and_big_small(self, top_rec_numbers: Sequence[int]) -> Dict[str, object]:
@@ -376,6 +376,61 @@ class Rolling88Analyzer:
                 "tie_prob": round((tie_cnt / n_draws) * 100, 1),
                 "avg_sum": round(sum_total / n_draws, 1),
             },
+        }
+
+    def analyze_weekday_picks(self, target_date: str, per_weekday_limit: int = 20) -> Dict[str, object]:
+        """依星期一～星期六各別統計最近 20 個同星期幾的開獎機率，為每天挑出 1 顆最有機會再出現的號碼。"""
+        wd_names = ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六"]
+        target_wd = dt.date.fromisoformat(target_date).weekday()
+        by_wd: Dict[int, List[DrawRecord]] = defaultdict(list)
+        for rec in self.all_records:
+            wd = dt.date.fromisoformat(rec.draw_date).weekday()
+            if wd < 6:
+                by_wd[wd].append(rec)
+
+        picks = []
+        for wd in range(6):
+            sub = by_wd[wd][-per_weekday_limit:]
+            m_draws = len(sub)
+            best_item = None
+            for num in range(1, 40):
+                pos = [i for i, r in enumerate(sub) if num in r.numbers]
+                hits = len(pos)
+                recent8 = sum(1 for p in pos if p >= max(0, m_draws - 8))
+                since_wd = (m_draws - 1 - pos[-1]) if pos else m_draws
+                avg_gap = (m_draws / hits) if hits > 0 else float(m_draws)
+                cycle_bonus = 8.0 if (hits >= 2 and abs(since_wd - avg_gap) <= 1.2) else 0.0
+                st = self.streak_map.get(num, 0)
+                st_mult = 1.0 if st == 0 else (0.92 if st == 1 else (0.65 if st == 2 else 0.25))
+                raw_score = (hits * 4.2 + recent8 * 6.5 + cycle_bonus) * st_mult
+                prob_pct = round((hits / m_draws) * 100, 1) if m_draws > 0 else 0.0
+                cand = {
+                    "weekday": wd,
+                    "label": wd_names[wd],
+                    "number": num,
+                    "formatted": f"{num:02d}",
+                    "hits": hits,
+                    "sample_draws": m_draws,
+                    "prob_pct": prob_pct,
+                    "recent8": recent8,
+                    "since_wd": since_wd,
+                    "score": round(raw_score, 1),
+                    "is_today": wd == target_wd,
+                    "reason": f"近{m_draws}個{wd_names[wd]}開出 {hits} 次（{prob_pct}%），近8週同日出 {recent8} 次，已隔 {since_wd} 週",
+                }
+                if best_item is None or (cand["score"], cand["recent8"], cand["hits"]) > (
+                    best_item["score"], best_item["recent8"], best_item["hits"]
+                ):
+                    best_item = cand
+            if best_item is not None:
+                picks.append(best_item)
+
+        today_pick = next((p for p in picks if p["is_today"]), picks[0] if picks else None)
+        return {
+            "target_weekday": target_wd,
+            "target_label": wd_names[target_wd] if target_wd < 6 else "星期日(休市)",
+            "today_pick": today_pick,
+            "weekly": picks,
         }
 
     def generate_prediction(self, target_date: str, top_k: int = 7) -> Dict[str, object]:
@@ -450,7 +505,7 @@ class Rolling88Analyzer:
                 "show": True,
                 "is_flame": tudi_high_prob,
                 "ai_score": picked["score"],
-                "note": f"01～39 強勢池自由嚴選（近36期開 {freq_map[pick_num]} 次）{overlap_note}",
+                "note": f"01～39 強勢池自由嚴選（近88期開 {freq_map[pick_num]} 次）{overlap_note}",
             }
             flame_numbers = [tudigong["formatted"]] if tudi_high_prob else []
         else:
@@ -478,6 +533,7 @@ class Rolling88Analyzer:
             "tudigong_number": tudigong,
             "tail_and_bs": self.analyze_tail_and_big_small([r["number"] for r in top_recs]),
             "cold_tracking": cold_info,
+            "weekday_picks": self.analyze_weekday_picks(target_date),
             "cycle_patterns": {
                 "lag_3_to_5_rules": cycles["lag_3_to_5_rules"],
                 "repeating_lead_pairs": cycles["repeating_lead_pairs"],
@@ -519,7 +575,7 @@ def grade_prediction(pred: Dict[str, object], actual: DrawRecord) -> Dict[str, o
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="今彩539 36期滾動分析＋冷門破冰＋AI火焰判定系統")
+    parser = argparse.ArgumentParser(description="今彩539 88期滾動分析＋冷門破冰＋AI火焰判定系統")
     parser.add_argument("--history-json", default="data/539_history.json")
     parser.add_argument("--pred-history-json", default="data/539_prediction_history.json")
     parser.add_argument("--out", default="output/539_latest_recommend.json")
@@ -553,11 +609,11 @@ def main() -> None:
         for item in json.loads(pred_hist_path.read_text(encoding="utf-8")):
             pred_history[item["draw_date"]] = item
 
-    start_idx = max(36, len(records) - 20)
+    start_idx = max(88, len(records) - 20)
     for idx in range(start_idx, len(records)):
         actual = records[idx]
         if actual.draw_date not in pred_history:
-            prior_pred = Rolling88Analyzer(records[:idx], window=36).generate_prediction(actual.draw_date, top_k=args.top)
+            prior_pred = Rolling88Analyzer(records[:idx], window=88).generate_prediction(actual.draw_date, top_k=args.top)
             pred_history[actual.draw_date] = grade_prediction(prior_pred, actual)
 
     sorted_pred_history = [pred_history[d] for d in sorted(pred_history.keys(), reverse=True)]
@@ -569,7 +625,7 @@ def main() -> None:
     if next_date.weekday() == 6:
         next_date += dt.timedelta(days=1)
 
-    next_pred = Rolling88Analyzer(records, window=36).generate_prediction(next_date.isoformat(), top_k=args.top)
+    next_pred = Rolling88Analyzer(records, window=88).generate_prediction(next_date.isoformat(), top_k=args.top)
     next_pred["recent_graded_history"] = sorted_pred_history[:30]
 
     out_path = Path(args.out)
@@ -580,7 +636,7 @@ def main() -> None:
     print(f"AI火焰高機率：{next_pred['ai_flame_numbers']}")
     print(f"獨支：{[s['formatted'] for s in next_pred['solo_numbers']]}")
     print(f"五路財神幸運號(已排除主牌與獨支)：{next_pred['tudigong_number']['formatted']}")
-    print(f"36期最久未開Top5：{[(c['formatted'], c['omitted_draws']) for c in next_pred['cold_tracking']['cold_top5']]}")
+    print(f"88期最久未開Top5：{[(c['formatted'], c['omitted_draws']) for c in next_pred['cold_tracking']['cold_top5']]}")
 
 
 if __name__ == "__main__":

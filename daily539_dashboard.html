@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="theme-color" content="#05070b" />
-  <title>今彩539 36期滾動抓牌＋冷門破冰系統</title>
+  <title>今彩539 88期滾動抓牌＋冷門破冰系統</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -173,7 +173,7 @@
           <div id="latest-balls" class="mt-4 grid grid-cols-5 gap-1.5 justify-items-center"></div>
           <div class="mt-4 border-t border-slate-800 pt-3 space-y-1.5 text-xs text-slate-400">
             <div class="flex justify-between"><span>歷史總期數</span><span id="stat-total-draws" class="font-bold text-white">-</span></div>
-            <div class="flex justify-between"><span>滾動分析基準</span><span class="font-bold text-amber-400">往前 36 期</span></div>
+            <div class="flex justify-between"><span>滾動分析基準</span><span class="font-bold text-amber-400">往前 88 期</span></div>
             <div class="flex justify-between"><span>預測目標日</span><span id="stat-target-date" class="font-bold text-white">-</span></div>
           </div>
         </div>
@@ -183,7 +183,7 @@
           <div class="flex flex-wrap items-center justify-between gap-2">
             <div>
               <h2 class="text-base font-extrabold text-white">每日推薦主牌（7 碼）</h2>
-              <p class="text-xs text-slate-400" id="flame-status-text">以最新一期往前 36 期計算</p>
+              <p class="text-xs text-slate-400" id="flame-status-text">以最新一期往前 88 期計算</p>
             </div>
             <span class="rounded-full bg-amber-500/20 border border-amber-400/40 px-2.5 py-0.5 text-xs font-bold text-amber-300">固定 7 碼</span>
           </div>
@@ -194,7 +194,7 @@
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <div class="text-sm font-black text-purple-200">精選獨支（1～2 支）</div>
-                <div class="text-xs text-purple-300/80">近 36 期固定間隔週期最強單支</div>
+                <div class="text-xs text-purple-300/80">近 88 期固定間隔週期最強單支</div>
               </div>
               <div id="solo-balls" class="flex flex-wrap items-center gap-3"></div>
             </div>
@@ -220,13 +220,29 @@
         </div>
       </div>
 
+
+      <!-- 星期專屬推薦號（週一～週六同星期大數據嚴選） -->
+      <div class="card-dark rounded-2xl p-4 sm:p-5 border-cyan-500/35 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="rounded-full bg-cyan-500/20 border border-cyan-400/40 px-2.5 py-0.5 text-xs font-bold text-cyan-300">星期專屬牌</span>
+              <h3 class="text-sm font-extrabold text-white">週一～週六同星期再出現機率嚴選（近 20 週同日統計）</h3>
+            </div>
+            <p class="mt-1 text-xs text-slate-400">每天更新時自動依「當天星期幾」從近 20 週同日紀錄中，挑出 1 顆最有機會再出現的號碼。</p>
+          </div>
+          <span id="weekday-today-badge" class="rounded-lg bg-amber-500/20 border border-amber-400/40 px-2.5 py-1 text-xs font-extrabold text-amber-300">-</span>
+        </div>
+        <div id="weekday-today-hero" class="rounded-xl border border-cyan-400/30 bg-[#0b1220] p-3.5 flex flex-wrap items-center gap-4"></div>
+      </div>
+
       <!-- 今日尾數預測 (0~9) 與 大小和機率 -->
       <div class="desktop-grid-2 grid grid-cols-1 gap-5 lg:grid-cols-2">
         <div class="card-dark rounded-2xl p-4 sm:p-5 flex flex-col justify-between border-amber-500/30">
           <div class="flex items-center justify-between">
             <div>
               <h3 class="text-sm font-extrabold text-white">今日主力尾數預測（0～9 尾）</h3>
-              <p class="text-xs text-slate-400">依近 36 期尾數熱度、遺漏回補與主牌共鳴綜合選出</p>
+              <p class="text-xs text-slate-400">依近 88 期尾數熱度、遺漏回補與主牌共鳴綜合選出</p>
             </div>
             <span class="rounded-full bg-amber-500/20 border border-amber-400/40 px-2.5 py-0.5 text-xs font-bold text-amber-300">尾數推薦</span>
           </div>
@@ -236,7 +252,7 @@
         <div class="card-dark rounded-2xl p-4 sm:p-5 flex flex-col justify-between border-emerald-500/30">
           <div class="flex items-center justify-between">
             <div>
-              <h3 class="text-sm font-extrabold text-white">開大／開小／開和 機率統計（近 36 期）</h3>
+              <h3 class="text-sm font-extrabold text-white">開大／開小／開和 機率統計（近 88 期）</h3>
               <p class="text-xs text-slate-400">以 01–19 為小、21–39 為大、20 為中界判定單期大小和</p>
             </div>
             <span id="bs-recommend-badge" class="rounded-full bg-emerald-500/20 border border-emerald-400/40 px-2.5 py-0.5 text-xs font-bold text-emerald-300">-</span>
@@ -245,12 +261,12 @@
         </div>
       </div>
 
-      <!-- 36 期最久未開 Top 5 + 冷門破冰留存紀錄 -->
+      <!-- 88 期最久未開 Top 5 + 冷門破冰留存紀錄 -->
       <div class="desktop-grid-2 grid grid-cols-1 gap-5 lg:grid-cols-2">
         <div class="card-dark rounded-2xl p-4 sm:p-5 space-y-3">
           <div class="flex items-center justify-between">
             <div>
-              <h3 class="text-sm font-extrabold text-white">近 36 期「最久未開」前 5 名冷門追蹤</h3>
+              <h3 class="text-sm font-extrabold text-white">近 88 期「最久未開」前 5 名冷門追蹤</h3>
               <p class="text-xs text-slate-400">近期開出即自動從本榜消失並移入破冰紀錄</p>
             </div>
             <span class="rounded-full bg-sky-500/20 border border-sky-400/40 px-2.5 py-0.5 text-xs font-bold text-sky-300">Top 5 遺漏</span>
@@ -281,7 +297,7 @@
       <!-- Top 12 評分圖表（全寬） -->
       <div class="card-dark rounded-2xl p-4 sm:p-5">
         <h3 class="text-sm font-extrabold text-white mb-1">Top 12 候選號碼綜合評分</h3>
-        <p class="text-xs text-slate-400 mb-3">基於最近 36 期滾動視窗</p>
+        <p class="text-xs text-slate-400 mb-3">基於最近 88 期滾動視窗</p>
         <div class="relative h-64">
           <canvas id="scoreChart"></canvas>
         </div>
@@ -294,7 +310,7 @@
         <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
           <div>
             <h2 class="text-base font-extrabold text-white">歷史預測自動對獎戰績留存（紅圈 = 命中）</h2>
-            <p class="text-xs text-slate-400">每期嚴格使用「開獎前 36 期」資料預測，開獎後自動比對五路財神、獨支與推薦主牌。</p>
+            <p class="text-xs text-slate-400">每期嚴格使用「開獎前 88 期」資料預測，開獎後自動比對五路財神、獨支與推薦主牌。</p>
           </div>
           <div id="graded-summary-badges" class="flex flex-wrap gap-2 text-xs"></div>
         </div>
@@ -322,13 +338,13 @@
       <div class="card-dark rounded-2xl p-4 sm:p-5 space-y-4">
         <div class="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <h2 class="text-base font-extrabold text-white">36 期內「隔 3～5 期」拖牌規律查詢</h2>
+            <h2 class="text-base font-extrabold text-white">88 期內「隔 3～5 期」拖牌規律查詢</h2>
             <p class="text-xs text-slate-400">統計指定號碼開出後隔 3、4、5 期重複開出哪些號碼</p>
           </div>
           <div class="flex flex-wrap items-center gap-2">
             <div>
               <label for="window-input" class="block text-[11px] font-semibold text-slate-400">基準期數</label>
-              <input id="window-input" type="number" min="30" max="582" value="36" class="w-20 rounded-lg border border-slate-700 bg-slate-800 px-2.5 py-1.5 text-xs font-bold text-white" />
+              <input id="window-input" type="number" min="30" max="582" value="88" class="w-20 rounded-lg border border-slate-700 bg-slate-800 px-2.5 py-1.5 text-xs font-bold text-white" />
             </div>
             <div>
               <label for="trigger-input" class="block text-[11px] font-semibold text-slate-400">查詢號碼（空白分隔）</label>
@@ -1092,7 +1108,7 @@
       return d.toISOString().slice(0, 10);
     }
 
-    function analyzeColdestAndIcebreakers(allRecords, windowSize = 36, topN = 5) {
+    function analyzeColdestAndIcebreakers(allRecords, windowSize = 88, topN = 5) {
       const records88 = allRecords.slice(-Math.min(windowSize, allRecords.length));
       const nDraws = records88.length;
       const coldList = [];
@@ -1137,7 +1153,7 @@
       const num = pool[(hash >>> 0) % pool.length];
       return {
         number: num, formatted: pad2(num), target_date: targetDate, freq_in_88: freq[num],
-        note: `已排除主牌與獨支，依 ${targetDate} 定號（近36期開 ${freq[num]} 次）`
+        note: `已排除主牌與獨支，依 ${targetDate} 定號（近88期開 ${freq[num]} 次）`
       };
     }
 
@@ -1147,7 +1163,7 @@
       for (let num = 1; num <= 39; num++) {
         const pos = [];
         for (let i = 0; i < total; i++) if (records88[i].numbers.includes(num)) pos.push(i);
-        if (pos.length < 3) continue;
+        if (pos.length < 4) continue;
         const gapCnt = new Map();
         for (let i = 1; i < pos.length; i++) { const g = pos[i] - pos[i - 1]; gapCnt.set(g, (gapCnt.get(g) || 0) + 1); }
         let bestGap = 1, bestHits = 0;
@@ -1159,7 +1175,7 @@
         }
         if (streak >= 3) continue;
         const sinceLast = (total - 1) - pos[pos.length - 1];
-        const recent30 = pos.filter(p => p >= Math.max(0, total - 15)).length;
+        const recent30 = pos.filter(p => p >= Math.max(0, total - 30)).length;
         let bonus = 0;
         if (sinceLast + 1 === bestGap) bonus = 45;
         else if (Math.abs((sinceLast + 1) - bestGap) <= 1) bonus = 22;
@@ -1189,7 +1205,7 @@
         }
         for (const a of triggers) {
           const tot = trigTotal[a];
-          if (tot < 2) continue;
+          if (tot < 3) continue;
           for (let b = 1; b <= 39; b++) {
             const cnt = follow[a][b];
             const lift = (cnt / tot) / BASELINE_PROB;
@@ -1214,10 +1230,10 @@
       records88.slice(-3).forEach(r => r.numbers.forEach(x => recent3.add(x)));
       const leadPairs = [];
       for (const [key, cnt] of leadPairCnt.entries()) {
-        if (cnt < 3) continue;
+        if (cnt < 4) continue;
         const [aStr, pk] = key.split('|');
         const a = Number(aStr);
-        if (leadTotal[a] < 3) continue;
+        if (leadTotal[a] < 5) continue;
         const [p1, p2] = pk.split('-').map(Number);
         const activeNow = recent3.has(a);
         if (activeNow) { cycleScores.set(p1, (cycleScores.get(p1) || 0) + cnt * 0.8); cycleScores.set(p2, (cycleScores.get(p2) || 0) + cnt * 0.8); }
@@ -1282,7 +1298,65 @@
       };
     }
 
-    function generatePrediction(allRecords, targetDate, topK = 7, windowSize = 36) {
+    function analyzeWeekdayPicks(allRecords, targetDate, streakMap, perWdLimit = 20) {
+      const wdNames = ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+      const dObj = new Date(targetDate + 'T00:00:00+08:00');
+      const jsDay = dObj.getDay();
+      const targetWd = jsDay === 0 ? 6 : jsDay - 1;
+      const byWd = [[], [], [], [], [], []];
+      for (const rec of allRecords) {
+        const dtObj = new Date(rec.draw_date + 'T00:00:00+08:00');
+        const gd = dtObj.getDay();
+        const wd = gd === 0 ? 6 : gd - 1;
+        if (wd >= 0 && wd < 6) byWd[wd].push(rec);
+      }
+      const picks = [];
+      for (let wd = 0; wd < 6; wd++) {
+        const sub = byWd[wd].slice(-perWdLimit);
+        const mDraws = sub.length;
+        let best = null;
+        for (let num = 1; num <= 39; num++) {
+          const pos = [];
+          for (let i = 0; i < mDraws; i++) if (sub[i].numbers.includes(num)) pos.push(i);
+          const hits = pos.length;
+          const recent8 = pos.filter(p => p >= Math.max(0, mDraws - 8)).length;
+          const sinceWd = pos.length ? (mDraws - 1 - pos[pos.length - 1]) : mDraws;
+          const avgGap = hits > 0 ? mDraws / hits : mDraws;
+          const cycleBonus = (hits >= 2 && Math.abs(sinceWd - avgGap) <= 1.2) ? 8.0 : 0.0;
+          const st = streakMap[num] || 0;
+          const stMult = st === 0 ? 1.0 : (st === 1 ? 0.92 : (st === 2 ? 0.65 : 0.25));
+          const rawScore = Number(((hits * 4.2 + recent8 * 6.5 + cycleBonus) * stMult).toFixed(1));
+          const probPct = mDraws > 0 ? Number(((hits / mDraws) * 100).toFixed(1)) : 0;
+          const cand = {
+            weekday: wd,
+            label: wdNames[wd],
+            number: num,
+            formatted: pad2(num),
+            hits,
+            sample_draws: mDraws,
+            prob_pct: probPct,
+            recent8,
+            since_wd: sinceWd,
+            score: rawScore,
+            is_today: wd === targetWd,
+            reason: `近${mDraws}個${wdNames[wd]}開出 ${hits} 次（${probPct}%），近8週同日出 ${recent8} 次，已隔 ${sinceWd} 週`
+          };
+          if (!best || cand.score > best.score || (cand.score === best.score && cand.recent8 > best.recent8) || (cand.score === best.score && cand.recent8 === best.recent8 && cand.hits > best.hits)) {
+            best = cand;
+          }
+        }
+        if (best) picks.push(best);
+      }
+      const todayPick = picks.find(p => p.is_today) || picks[0] || null;
+      return {
+        target_weekday: targetWd,
+        target_label: targetWd < 6 ? wdNames[targetWd] : '星期日(休市)',
+        today_pick: todayPick,
+        weekly: picks
+      };
+    }
+
+    function generatePrediction(allRecords, targetDate, topK = 7, windowSize = 88) {
       const records88 = allRecords.slice(-Math.min(windowSize, allRecords.length));
       const solo = analyzeSolo(records88, 2);
       const cycles = analyzeCycles(records88);
@@ -1355,7 +1429,7 @@
           show: true,
           ai_score: picked.score,
           isFlame: picked.score >= 50.0,
-          note: `01～39 強勢池自由嚴選（近36期開 ${freqT[picked.number]} 次）${overlapNote}`
+          note: `01～39 強勢池自由嚴選（近88期開 ${freqT[picked.number]} 次）${overlapNote}`
         };
       } else {
         const bestSc = ranked.length ? ranked[0].score : 0;
@@ -1380,6 +1454,7 @@
         solo_numbers: solo,
         tudigong_number: tudigong,
         tail_and_bs: analyzeTailAndBigSmall(records88, topRecs.map(r => r.number)),
+        weekday_picks: analyzeWeekdayPicks(allRecords, targetDate, (() => { const m = {}; for (let num=1; num<=39; num++) { let st=0; for (let i=records88.length-1; i>=0; i--) { if (records88[i].numbers.includes(num)) st++; else break; } m[num]=st; } return m; })()),
         cold_tracking: coldInfo,
         lead_pairs: cycles.leadPairs
       };
@@ -1416,15 +1491,15 @@
     function buildOrLoadGradedHistory(allDraws, topK) {
       let existing = new Map();
       try { const saved = localStorage.getItem(STORAGE_GRADED_KEY); if (saved) for (const g of JSON.parse(saved)) existing.set(g.draw_date, g); } catch (e) {}
-      const startIdx = Math.max(36, allDraws.length - 20);
+      const startIdx = Math.max(88, allDraws.length - 20);
       for (let i = startIdx; i < allDraws.length; i++) {
         const actual = allDraws[i];
         const prev = existing.get(actual.draw_date);
         if (!prev) {
-          const priorPred = generatePrediction(allDraws.slice(0, i), actual.draw_date, topK, 36);
+          const priorPred = generatePrediction(allDraws.slice(0, i), actual.draw_date, topK, 88);
           existing.set(actual.draw_date, gradePrediction(priorPred, actual));
         } else if (prev.tudigong_is_flame === undefined && !Array.isArray(prev.predicted_flames)) {
-          const priorPred = generatePrediction(allDraws.slice(0, i), actual.draw_date, topK, 36);
+          const priorPred = generatePrediction(allDraws.slice(0, i), actual.draw_date, topK, 88);
           prev.tudigong_is_flame = Boolean(priorPred.tudigong_number.isFlame);
           prev.predicted_flames = priorPred.tudigong_number.isFlame ? [prev.predicted_tudigong] : [];
         }
@@ -1438,7 +1513,7 @@
       const topK = 7;
       const latest = draws[draws.length - 1];
       const targetDate = nextDrawDate(latest.draw_date);
-      const pred = generatePrediction(draws, targetDate, topK, 36);
+      const pred = generatePrediction(draws, targetDate, topK, 88);
       gradedHistory = buildOrLoadGradedHistory(draws, topK);
 
       document.getElementById('dataset-subtitle').textContent = `已載入 ${draws.length} 期（${draws[0].draw_date} ～ ${latest.draw_date}）`;
@@ -1447,7 +1522,7 @@
       document.getElementById('stat-target-date').textContent = formatDateWithWeekday(targetDate);
       document.getElementById('latest-balls').innerHTML = latest.numbers.map(n => `<span class="lotto-ball lotto-ball-latest ${ballZoneClass(n)}">${pad2(n)}</span>`).join('');
 
-      document.getElementById('flame-status-text').textContent = '以最新一期往前 36 期計算：週期拖牌 + 共現聽牌 + 獨支動能';
+      document.getElementById('flame-status-text').textContent = '以最新一期往前 88 期計算：週期拖牌 + 共現聽牌 + 獨支動能';
       document.getElementById('recommended-balls').innerHTML = pred.recommended_items.map(r => `
         <div class="flex flex-col items-center gap-1.5">
           <span class="lotto-ball ${ballZoneClass(r.number)}">${r.formatted}</span>
@@ -1484,13 +1559,27 @@
         document.getElementById('tudigong-note').textContent = `${pred.tudigong_number.note}｜AI 達標推薦（${pred.tudigong_number.ai_score}分）。`;
       }
 
+      const wp = pred.weekday_picks || analyzeWeekdayPicks(draws, targetDate, {});
+      if (wp && wp.today_pick) {
+        document.getElementById('weekday-today-badge').textContent = `今日焦點：${wp.target_label}`;
+        const tp = wp.today_pick;
+        document.getElementById('weekday-today-hero').innerHTML = `
+          <span class="lotto-ball ${ballZoneClass(tp.formatted)}">${tp.formatted}</span>
+          <div class="text-xs leading-relaxed">
+            <div class="font-extrabold text-cyan-200 text-sm">${tp.label}最有機會再出現號碼：${tp.formatted}</div>
+            <div class="text-slate-300 mt-0.5">${tp.reason}</div>
+          </div>
+        `;
+
+      }
+
       const tb = pred.tail_and_bs;
       document.getElementById('tail-predict-box').innerHTML = `
         <div class="flex items-center gap-3 rounded-xl bg-amber-500/15 border border-amber-400/40 px-4 py-3">
           <div class="text-3xl font-black text-amber-300">${tb.best_tail.tail} 尾</div>
           <div class="text-xs leading-relaxed">
             <div class="font-bold text-white">對應號碼：${tb.best_tail.nums.join('、')}</div>
-            <div class="text-slate-300">近36期出現 ${tb.best_tail.count} 次（已隔 ${tb.best_tail.omitted} 期未出）</div>
+            <div class="text-slate-300">近88期出現 ${tb.best_tail.count} 次（已隔 ${tb.best_tail.omitted} 期未出）</div>
           </div>
         </div>
         <div class="flex flex-wrap gap-2 text-xs">
@@ -1635,7 +1724,7 @@
     }
 
     function renderCycleQuery() {
-      const winSize = Math.max(30, Number(document.getElementById('window-input').value) || 36);
+      const winSize = Math.max(30, Number(document.getElementById('window-input').value) || 88);
       const records88 = draws.slice(-Math.min(winSize, draws.length));
       const trigs = document.getElementById('trigger-input').value.trim().split(/[\s,，]+/).map(Number).filter(n => n >= 1 && n <= 39);
       const grid = document.getElementById('cycle-lag-grid');
@@ -1745,7 +1834,7 @@
       if (!dateStr || nums.length !== 5) { showToast('請輸入完整日期與 5 個不重複號碼（01–39）。'); return; }
       const topK = 7;
       const priorDraws = draws.filter(d => d.draw_date < dateStr);
-      const predForDay = generatePrediction(priorDraws, dateStr, topK, 36);
+      const predForDay = generatePrediction(priorDraws, dateStr, topK, 88);
       const actualObj = { draw_date: dateStr, period: '', numbers: nums.sort((a, b) => a - b) };
       const graded = gradePrediction(predForDay, actualObj);
 
