@@ -1,15 +1,15 @@
 """
-今彩539 每日自動更新與多維度抓牌推薦系統 (88期滾動 + 冷門破冰 + 火焰高機率判定版)
+今彩539 每日自動更新與多維度抓牌推薦系統 (36期滾動 + 冷門破冰 + 火焰高機率判定版)
 ====================================================================================
 功能：
 1. 自動抓取與合併歷史資料（114 年至今，並支援每日 21:35 自動更新）。
-2. 以最新一期往前滾動「88 期」為基準，產出：
+2. 以最新一期往前滾動「36 期」為基準，產出：
    - 每日推薦固定 7 碼（綜合權重排序）
-   - 獨支 1～2 支（單支在 88 期內固定間隔週期出現頻率最高者）
+   - 獨支 1～2 支（單支在 36 期內固定間隔週期出現頻率最高者）
    - 週期規律牌組（隔 3～5 期拖牌 + 前導號帶出固定雙星）
    - 每日五路財神幸運號碼 1 碼（嚴格排除推薦主牌與獨支後挑選，不重複）
    - AI 高機率火焰框判定（僅當系統判定綜合機率達高標門檻時標記火焰框，否則不標記）
-   - 近 88 期最久未開 Top 5 冷門追蹤，若開出則自動移出並記錄「幾期沒開、於哪天開出」
+   - 近 36 期最久未開 Top 5 冷門追蹤，若開出則自動移出並記錄「幾期沒開、於哪天開出」
 3. 自動對獎與紀錄留存（標註五路財神／獨支／推薦 7 碼命中顆數）。
 """
 
@@ -115,7 +115,7 @@ class Rolling88Analyzer:
     BASELINE_PROB = 5.0 / 39.0
     FLAME_SCORE_THRESHOLD = 75.0
 
-    def __init__(self, all_records: Sequence[DrawRecord], window: int = 88):
+    def __init__(self, all_records: Sequence[DrawRecord], window: int = 36):
         self.all_records = deduplicate_and_sort(all_records)
         if len(self.all_records) < 15:
             raise ValueError("歷史開獎期數過少，至少需要 15 期以上。")
@@ -132,7 +132,7 @@ class Rolling88Analyzer:
             self.streak_map[_n] = _st
 
     def analyze_coldest_and_icebreakers(self, top_n: int = 5) -> Dict[str, object]:
-        """統計近 88 期最久未開前 5 碼，並追蹤近期從該榜單破冰開出的號碼。"""
+        """統計近 36 期最久未開前 5 碼，並追蹤近期從該榜單破冰開出的號碼。"""
         n_draws = len(self.records)
         cold_list = []
         for num in range(1, 40):
@@ -166,7 +166,7 @@ class Rolling88Analyzer:
             prev_win = self.all_records[max(0, idx - self.window) : idx]
             if not prev_win:
                 continue
-            # 計算開獎前這 88 期的遺漏排行
+            # 計算開獎前這 36 期的遺漏排行
             prev_omitted = {}
             for num in range(1, 40):
                 lp = -1
@@ -197,7 +197,7 @@ class Rolling88Analyzer:
         for num in range(1, 40):
             positions = [idx for idx, rec in enumerate(self.records) if num in rec.numbers]
             freq = len(positions)
-            if freq < 4:
+            if freq < 3:
                 continue
             gaps = [positions[i] - positions[i - 1] for i in range(1, len(positions))]
             best_gap, best_gap_hits = Counter(gaps).most_common(1)[0]
@@ -205,7 +205,7 @@ class Rolling88Analyzer:
             if st >= 3:
                 continue  # 連開 3 期以上不以獨支拚連 4
             draws_since_last = (total - 1) - positions[-1]
-            recent_30 = sum(1 for p in positions if p >= max(0, total - 30))
+            recent_30 = sum(1 for p in positions if p >= max(0, total - 15))
             if draws_since_last + 1 == best_gap:
                 cycle_match_bonus = 45.0
             elif abs((draws_since_last + 1) - best_gap) <= 1:
@@ -251,7 +251,7 @@ class Rolling88Analyzer:
                         follow_cnt[a][b] += 1
             for a in triggers:
                 tot = trig_total[a]
-                if tot < 3:
+                if tot < 2:
                     continue
                 for b, cnt in follow_cnt[a].most_common(3):
                     prob = cnt / tot
@@ -325,7 +325,7 @@ class Rolling88Analyzer:
             "formatted": f"{pick:02d}",
             "target_date": target_date,
             "freq_in_88": freq[pick],
-            "note": f"已排除推薦主牌與獨支，依 {target_date} 五路財神吉數定號（近88期開 {freq[pick]} 次）",
+            "note": f"已排除推薦主牌與獨支，依 {target_date} 五路財神吉數定號（近36期開 {freq[pick]} 次）",
         }
 
     def analyze_tail_and_big_small(self, top_rec_numbers: Sequence[int]) -> Dict[str, object]:
@@ -425,14 +425,47 @@ class Rolling88Analyzer:
         ranked.sort(key=lambda x: x["score"], reverse=True)  # type: ignore[arg-type]
 
         top_recs = ranked[:top_k]
-        # 固定排除前 8 碼與獨支，確保切換 7 碼或 8 碼時五路財神號碼完全一致
-        exclude_set = {r["number"] for r in ranked[:8]} | {s["number"] for s in solo}  # type: ignore[misc]
-        tudigong = self.compute_tudigong_number(target_date, exclude_numbers=exclude_set)  # type: ignore[arg-type]
-        tudi_item = next(r for r in ranked if r["number"] == tudigong["number"])
-        tudi_high_prob = float(tudi_item["score"]) >= 50.0  # type: ignore[arg-type]
-        tudigong["is_flame"] = tudi_high_prob
-        tudigong["ai_score"] = tudi_item["score"]
-        flame_numbers = [tudigong["formatted"]] if tudi_high_prob else []
+        # 01~39 全體自由發揮：從 AI 分數 >= 35 的前 8 強強勢池中依日期定號；>= 50 亮火焰框
+        rec_set = {r["number"] for r in top_recs}  # type: ignore[misc]
+        solo_set = {s["number"] for s in solo}  # type: ignore[misc]
+        strong_pool = [r for r in ranked if float(r["score"]) >= 35.0][:8]  # type: ignore[arg-type]
+        if strong_pool:
+            freq_map = Counter(n for rec in self.records for n in rec.numbers)
+            digest = hashlib.sha256(f"CAISHEN-539-{target_date}".encode("utf-8")).hexdigest()
+            picked = strong_pool[int(digest[:8], 16) % len(strong_pool)]
+            pick_num = int(picked["number"])  # type: ignore[arg-type]
+            pick_score = float(picked["score"])  # type: ignore[arg-type]
+            tudi_high_prob = pick_score >= 50.0
+            overlap_tags = []
+            if pick_num in rec_set:
+                overlap_tags.append("主牌")
+            if pick_num in solo_set:
+                overlap_tags.append("獨支")
+            overlap_note = f"｜★與{'/'.join(overlap_tags)}雙重共振" if overlap_tags else ""
+            tudigong = {
+                "number": pick_num,
+                "formatted": f"{pick_num:02d}",
+                "target_date": target_date,
+                "freq_in_88": freq_map[pick_num],
+                "show": True,
+                "is_flame": tudi_high_prob,
+                "ai_score": picked["score"],
+                "note": f"01～39 強勢池自由嚴選（近36期開 {freq_map[pick_num]} 次）{overlap_note}",
+            }
+            flame_numbers = [tudigong["formatted"]] if tudi_high_prob else []
+        else:
+            best_score = float(ranked[0]["score"]) if ranked else 0.0  # type: ignore[arg-type]
+            tudigong = {
+                "number": 0,
+                "formatted": "--",
+                "target_date": target_date,
+                "freq_in_88": 0,
+                "show": False,
+                "is_flame": False,
+                "ai_score": best_score,
+                "note": f"全場最高僅 {best_score:.1f} 分（未達 35 分顯牌門檻），五路財神今日休息不強行報牌",
+            }
+            flame_numbers = []
 
         return {
             "target_date": target_date,
@@ -458,7 +491,8 @@ def grade_prediction(pred: Dict[str, object], actual: DrawRecord) -> Dict[str, o
     solo_list = [s["formatted"] for s in pred["solo_numbers"]]  # type: ignore[attr-defined]
     solo_hits = [n for n in solo_list if n in actual_set]
     tudi = pred["tudigong_number"]["formatted"]  # type: ignore[index]
-    tudi_hit = tudi in actual_set
+    tudi_active = bool(pred["tudigong_number"].get("show", True)) and tudi != "--"  # type: ignore[index]
+    tudi_hit = tudi_active and (tudi in actual_set)
 
     all_hits = sorted(set(rec_hits + solo_hits + ([tudi] if tudi_hit else [])))
     categories = []
@@ -485,7 +519,7 @@ def grade_prediction(pred: Dict[str, object], actual: DrawRecord) -> Dict[str, o
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="今彩539 88期滾動分析＋冷門破冰＋AI火焰判定系統")
+    parser = argparse.ArgumentParser(description="今彩539 36期滾動分析＋冷門破冰＋AI火焰判定系統")
     parser.add_argument("--history-json", default="data/539_history.json")
     parser.add_argument("--pred-history-json", default="data/539_prediction_history.json")
     parser.add_argument("--out", default="output/539_latest_recommend.json")
@@ -519,11 +553,11 @@ def main() -> None:
         for item in json.loads(pred_hist_path.read_text(encoding="utf-8")):
             pred_history[item["draw_date"]] = item
 
-    start_idx = max(88, len(records) - 20)
+    start_idx = max(36, len(records) - 20)
     for idx in range(start_idx, len(records)):
         actual = records[idx]
         if actual.draw_date not in pred_history:
-            prior_pred = Rolling88Analyzer(records[:idx], window=88).generate_prediction(actual.draw_date, top_k=args.top)
+            prior_pred = Rolling88Analyzer(records[:idx], window=36).generate_prediction(actual.draw_date, top_k=args.top)
             pred_history[actual.draw_date] = grade_prediction(prior_pred, actual)
 
     sorted_pred_history = [pred_history[d] for d in sorted(pred_history.keys(), reverse=True)]
@@ -535,7 +569,7 @@ def main() -> None:
     if next_date.weekday() == 6:
         next_date += dt.timedelta(days=1)
 
-    next_pred = Rolling88Analyzer(records, window=88).generate_prediction(next_date.isoformat(), top_k=args.top)
+    next_pred = Rolling88Analyzer(records, window=36).generate_prediction(next_date.isoformat(), top_k=args.top)
     next_pred["recent_graded_history"] = sorted_pred_history[:30]
 
     out_path = Path(args.out)
@@ -546,7 +580,7 @@ def main() -> None:
     print(f"AI火焰高機率：{next_pred['ai_flame_numbers']}")
     print(f"獨支：{[s['formatted'] for s in next_pred['solo_numbers']]}")
     print(f"五路財神幸運號(已排除主牌與獨支)：{next_pred['tudigong_number']['formatted']}")
-    print(f"88期最久未開Top5：{[(c['formatted'], c['omitted_draws']) for c in next_pred['cold_tracking']['cold_top5']]}")
+    print(f"36期最久未開Top5：{[(c['formatted'], c['omitted_draws']) for c in next_pred['cold_tracking']['cold_top5']]}")
 
 
 if __name__ == "__main__":
