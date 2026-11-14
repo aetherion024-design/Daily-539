@@ -425,8 +425,8 @@ class Rolling88Analyzer:
                 st = self.streak_map.get(num, 0)
                 st_mult = 1.0 if st == 0 else (0.92 if st == 1 else (0.65 if st == 2 else 0.25))
                 rot_wd_mult = 0.70 if num == last_wd_miss_num else 1.0
-                trend_part = (ranked_scores.get(num, 0.0) if ranked_scores else 0.0) * 0.35
-                raw_score = (wd_base * 0.65 + trend_part) * st_mult * rot_wd_mult
+                trend_part = (ranked_scores.get(num, 0.0) if ranked_scores else 0.0) * 0.15
+                raw_score = (wd_base * 0.85 + trend_part) * st_mult * rot_wd_mult
                 prob_pct = round((hits / m_draws) * 100, 1) if m_draws > 0 else 0.0
                 cand = {
                     "weekday": wd,
@@ -671,9 +671,25 @@ def main() -> None:
     pred_history: Dict[str, Dict[str, object]] = {}
     if pred_hist_path.exists():
         for item in json.loads(pred_hist_path.read_text(encoding="utf-8")):
+            if isinstance(item.get("hit_categories"), list):
+                item["hit_categories"] = ["五路財神牌" if c == "土地公牌" else c for c in item["hit_categories"]]
             pred_history[item["draw_date"]] = item
 
     start_idx = max(88, len(records) - 20)
+    date_to_idx = {r.draw_date: i for i, r in enumerate(records)}
+    for d_str, item in list(pred_history.items()):
+        if (not item.get("predicted_weekday") or item.get("predicted_weekday") == "--" or item.get("predicted_tail") is None) and d_str in date_to_idx:
+            i_idx = date_to_idx[d_str]
+            if i_idx >= 36:
+                p_back = Rolling88Analyzer(records[:i_idx], window=88).generate_prediction(d_str, top_k=args.top)
+                g_back = grade_prediction(p_back, records[i_idx])
+                if not item.get("predicted_weekday") or item.get("predicted_weekday") == "--":
+                    item["predicted_weekday"] = g_back["predicted_weekday"]
+                    item["weekday_hit"] = g_back["weekday_hit"]
+                if item.get("predicted_tail") is None:
+                    item["predicted_tail"] = g_back["predicted_tail"]
+                    item["tail_hit"] = g_back["tail_hit"]
+                    item["tail_hit_nums"] = g_back["tail_hit_nums"]
     for idx in range(start_idx, len(records)):
         actual = records[idx]
         if actual.draw_date not in pred_history:

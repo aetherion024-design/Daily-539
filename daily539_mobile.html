@@ -1346,8 +1346,8 @@
           const st = streakMap[num] || 0;
           const stMult = st === 0 ? 1.0 : (st === 1 ? 0.92 : (st === 2 ? 0.65 : 0.25));
           const rotWdMult = num === lastWdMissNum ? 0.70 : 1.0;
-          const trendPart = (rankedMap[num] || 0) * 0.35;
-          const rawScore = Number((((info.base * 0.65) + trendPart) * stMult * rotWdMult).toFixed(1));
+          const trendPart = (rankedMap[num] || 0) * 0.15;
+          const rawScore = Number((((info.base * 0.85) + trendPart) * stMult * rotWdMult).toFixed(1));
           const probPct = mDraws > 0 ? Number(((info.hits / mDraws) * 100).toFixed(1)) : 0;
           const cand = {
             weekday: wd,
@@ -1584,6 +1584,35 @@
               prev.tail_hit_nums = tHits;
               prev.tail_hit = tHits.length > 0;
             }
+          }
+        }
+      }
+      const dateToIdx = new Map(allDraws.map((d, idx) => [d.draw_date, idx]));
+      for (const prev of existing.values()) {
+        if (Array.isArray(prev.hit_categories)) {
+          prev.hit_categories = prev.hit_categories.map(c => c === '土地公牌' ? '五路財神牌' : c);
+        }
+        const i = dateToIdx.get(prev.draw_date);
+        if (i !== undefined && i >= 36 && (!prev.predicted_weekday || prev.predicted_weekday === '--' || prev.predicted_tail === undefined || prev.predicted_tail === null)) {
+          const actual = allDraws[i];
+          const priorPred = generatePrediction(allDraws.slice(0, i), actual.draw_date, topK, 88);
+          if (!prev.predicted_weekday || prev.predicted_weekday === '--') {
+            const wdPick = priorPred.weekday_picks && priorPred.weekday_picks.today_pick ? priorPred.weekday_picks.today_pick.formatted : '--';
+            prev.predicted_weekday = wdPick;
+            const actSet = new Set(actual.numbers.map(pad2));
+            prev.weekday_hit = wdPick !== '--' && actSet.has(wdPick);
+            if (prev.weekday_hit && Array.isArray(prev.hit_numbers) && !prev.hit_numbers.includes(wdPick)) {
+              prev.hit_numbers = [...prev.hit_numbers, wdPick].sort();
+              prev.hit_count = prev.hit_numbers.length;
+              prev.hit_categories = ['星期牌', ...(prev.hit_categories || []).filter(c => c !== '未命中')];
+            }
+          }
+          if (prev.predicted_tail === undefined || prev.predicted_tail === null) {
+            const pTail = priorPred.tail_and_bs && priorPred.tail_and_bs.best_tail ? priorPred.tail_and_bs.best_tail.tail : null;
+            prev.predicted_tail = pTail;
+            const tHits = pTail !== null ? actual.numbers.filter(n => (n % 10) === Number(pTail)).map(pad2) : [];
+            prev.tail_hit_nums = tHits;
+            prev.tail_hit = tHits.length > 0;
           }
         }
       }
