@@ -536,8 +536,11 @@ class Rolling88Analyzer:
         strong_pool = [r for r in ranked if float(r["score"]) >= 35.0][:8]  # type: ignore[arg-type]
         if strong_pool:
             freq_map = Counter(n for rec in self.records for n in rec.numbers)
-            digest = hashlib.sha256(f"CAISHEN-539-{target_date}".encode("utf-8")).hexdigest()
-            picked = strong_pool[int(digest[:8], 16) % len(strong_pool)]
+            _h = 2166136261
+            for _ch in f"CAISHEN-539-{target_date}":
+                _h ^= ord(_ch)
+                _h = (_h * 16777619) & 0xFFFFFFFF
+            picked = strong_pool[_h % len(strong_pool)]
             pick_num = int(picked["number"])  # type: ignore[arg-type]
             pick_score = float(picked["score"])  # type: ignore[arg-type]
             tudi_high_prob = pick_score >= 50.0
