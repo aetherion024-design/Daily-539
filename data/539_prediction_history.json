@@ -1,5 +1,44 @@
 [
   {
+    "draw_date": "2026-11-16",
+    "actual_numbers": [
+      "11",
+      "21",
+      "22",
+      "35",
+      "37"
+    ],
+    "predicted_recommended": [
+      "30",
+      "34",
+      "14",
+      "07",
+      "38",
+      "17",
+      "32"
+    ],
+    "predicted_solo": [
+      "14",
+      "30"
+    ],
+    "predicted_tudigong": "30",
+    "predicted_flames": [
+      "30"
+    ],
+    "tudigong_is_flame": true,
+    "hit_numbers": [],
+    "hit_count": 0,
+    "hit_categories": [
+      "未命中"
+    ],
+    "tudigong_hit": false,
+    "predicted_weekday": "19",
+    "weekday_hit": false,
+    "predicted_tail": 4,
+    "tail_hit": false,
+    "tail_hit_nums": []
+  },
+  {
     "draw_date": "2026-11-14",
     "actual_numbers": [
       "03",
