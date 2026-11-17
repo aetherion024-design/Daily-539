@@ -1673,35 +1673,7 @@
           </div>
         `).join('');
       }
-      if (cachedGraded7) {
-        gradedHistory = cachedGraded7.map(g => {
-          const recK = (g.predicted_recommended || []).slice(0, topK);
-          const actSet = new Set(g.actual_numbers || []);
-          const recHits = recK.filter(n => actSet.has(n));
-          const soloHits = (g.predicted_solo || []).filter(n => actSet.has(n));
-          const tudiHit = Boolean(g.tudigong_hit);
-          const wdHit = Boolean(g.weekday_hit);
-          const allHits = [...new Set([
-            ...recHits,
-            ...soloHits,
-            ...(tudiHit && g.predicted_tudigong ? [g.predicted_tudigong] : []),
-            ...(wdHit && g.predicted_weekday ? [g.predicted_weekday] : [])
-          ])].sort();
-          const cats = [];
-          if (wdHit) cats.push('星期牌');
-          if (tudiHit) cats.push('五路財神牌');
-          if (soloHits.length) cats.push(`獨支(${soloHits.join(',')})`);
-          if (recHits.length) cats.push(`推薦${topK}碼(${recHits.join(',')})`);
-          return {
-            ...g,
-            predicted_recommended: recK,
-            hit_numbers: allHits,
-            hit_count: allHits.length,
-            hit_categories: cats.length ? cats : ['未命中']
-          };
-        });
-        renderGradedSection();
-      }
+      // 對獎留存永遠固定顯示完整 7 碼（方便直接查看第 6、7 顆是否開出）
     }
     function setTopK(k) {
       localStorage.setItem(STORAGE_TOPK_KEY, String(k));
@@ -1855,6 +1827,7 @@
 
       renderLeadPairsAndQuery(pred);
       renderTopKView(topK);
+      renderGradedSection();
     }
     function renderGradedSection() {
       const totalGraded = gradedHistory.length;
