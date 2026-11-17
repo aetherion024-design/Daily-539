@@ -1,5 +1,45 @@
 [
   {
+    "draw_date": "2026-11-17",
+    "actual_numbers": [
+      "05",
+      "17",
+      "26",
+      "32",
+      "38"
+    ],
+    "predicted_recommended": [
+      "19",
+      "30",
+      "32",
+      "34",
+      "17",
+      "08",
+      "11"
+    ],
+    "predicted_solo": [
+      "30",
+      "11"
+    ],
+    "predicted_tudigong": "34",
+    "predicted_flames": [],
+    "tudigong_is_flame": false,
+    "hit_numbers": [
+      "17",
+      "32"
+    ],
+    "hit_count": 2,
+    "hit_categories": [
+      "推薦7碼(32,17)"
+    ],
+    "tudigong_hit": false,
+    "predicted_weekday": "34",
+    "weekday_hit": false,
+    "predicted_tail": 4,
+    "tail_hit": false,
+    "tail_hit_nums": []
+  },
+  {
     "draw_date": "2026-11-16",
     "actual_numbers": [
       "11",
