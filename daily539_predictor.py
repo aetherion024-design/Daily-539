@@ -457,21 +457,21 @@ class Rolling88Analyzer:
             "weekly": picks,
         }
 
-    def generate_prediction(self, target_date: str, top_k: int = 7, apply_rotation: bool = True) -> Dict[str, object]:
+    def generate_prediction(self, target_date: str, top_k: int = 5, apply_rotation: bool = True) -> Dict[str, object]:
         rot_miss1: Set[int] = set()
         rot_miss2: Set[int] = set()
         if apply_rotation and len(self.all_records) >= self.window + 2:
             prev1 = Rolling88Analyzer(self.all_records[:-1], window=self.window).generate_prediction(
                 self.all_records[-1].draw_date, top_k=top_k, apply_rotation=False
             )
-            prev1_focus = {int(x) for x in prev1["recommended_numbers"][:3]} | {int(s["number"]) for s in prev1["solo_numbers"]}  # type: ignore[index]
+            prev1_focus = {int(x) for x in prev1["recommended_numbers"][:5]} | {int(s["number"]) for s in prev1["solo_numbers"]}  # type: ignore[index]
             last_actual = set(self.all_records[-1].numbers)
             rot_miss1 = prev1_focus - last_actual
 
             prev2 = Rolling88Analyzer(self.all_records[:-2], window=self.window).generate_prediction(
                 self.all_records[-2].draw_date, top_k=top_k, apply_rotation=False
             )
-            prev2_focus = {int(x) for x in prev2["recommended_numbers"][:3]} | {int(s["number"]) for s in prev2["solo_numbers"]}  # type: ignore[index]
+            prev2_focus = {int(x) for x in prev2["recommended_numbers"][:5]} | {int(s["number"]) for s in prev2["solo_numbers"]}  # type: ignore[index]
             prev2_actual = set(self.all_records[-2].numbers)
             rot_miss2 = rot_miss1 & (prev2_focus - prev2_actual)
 
@@ -511,13 +511,17 @@ class Rolling88Analyzer:
         n_so = norm(solo_map)
 
         ranked = []
+        recent10_cnt: Counter[int] = Counter()
+        for rec in self.records[-10:]:
+            recent10_cnt.update(rec.numbers)
+
         for n in range(1, 40):
             st = self.streak_map.get(n, 0)
             streak_mult = 1.0 if st == 0 else (0.92 if st == 1 else (0.65 if st == 2 else 0.25))
-            rot_mult = 0.55 if n in rot_miss2 else (0.75 if n in rot_miss1 else 1.0)
-            score = round(((0.45 * n_cy[n] + 0.30 * n_co[n] + 0.25 * n_so[n]) * 100) * streak_mult * rot_mult, 1)
+            rot_mult = 0.48 if n in rot_miss2 else (0.72 if n in rot_miss1 else 1.0)
+            overheat_mult = 0.85 if recent10_cnt[n] >= 4 else 1.0
+            score = round(((0.45 * n_cy[n] + 0.30 * n_co[n] + 0.25 * n_so[n]) * 100) * streak_mult * rot_mult * overheat_mult, 1)
             active_signals = sum([n_cy[n] >= 0.4, n_co[n] >= 0.4, n_so[n] >= 0.4])
-            # AI 火焰判定：綜合評分 >= 75 且至少 2 項訊號同時成立
             is_flame = score >= self.FLAME_SCORE_THRESHOLD and active_signals >= 2
             ranked.append(
                 {
@@ -529,7 +533,27 @@ class Rolling88Analyzer:
             )
         ranked.sort(key=lambda x: x["score"], reverse=True)  # type: ignore[arg-type]
 
-        top_recs = ranked[:top_k]
+        # 結構分散選牌：同尾最多 2 顆、同十位區間最多 3 顆
+        top_recs = []
+        tail_used: Counter[int] = Counter()
+        zone_used: Counter[int] = Counter()
+        for item in ranked:
+            num = int(item["number"])  # type: ignore[arg-type]
+            t = num % 10
+            z = min(3, num // 10)
+            if tail_used[t] < 2 and zone_used[z] < 3:
+                top_recs.append(item)
+                tail_used[t] += 1
+                zone_used[z] += 1
+                if len(top_recs) == top_k:
+                    break
+        if len(top_recs) < top_k:
+            chosen = {int(x["number"]) for x in top_recs}  # type: ignore[arg-type]
+            for item in ranked:
+                if int(item["number"]) not in chosen:  # type: ignore[arg-type]
+                    top_recs.append(item)
+                    if len(top_recs) == top_k:
+                        break
         # 01~39 全體自由發揮：從 AI 分數 >= 35 的前 8 強強勢池中依日期定號；>= 50 亮火焰框
         rec_set = {r["number"] for r in top_recs}  # type: ignore[misc]
         solo_set = {s["number"] for s in solo}  # type: ignore[misc]
@@ -647,7 +671,7 @@ def main() -> None:
     parser.add_argument("--pred-history-json", default="data/539_prediction_history.json")
     parser.add_argument("--out", default="output/539_latest_recommend.json")
     parser.add_argument("--update", action="store_true")
-    parser.add_argument("--top", type=int, default=7, choices=[7])
+    parser.add_argument("--top", type=int, default=5, choices=[7])
     args = parser.parse_args()
 
     history_path = Path(args.history_json)

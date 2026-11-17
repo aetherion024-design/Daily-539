@@ -180,12 +180,16 @@
         <div class="desktop-span-2 card-dark rounded-2xl p-4 sm:p-5 lg:col-span-2 border-amber-500/35">
           <div class="flex flex-wrap items-center justify-between gap-2">
             <div>
-              <h2 class="text-base font-extrabold text-white">每日推薦主牌（7 碼）</h2>
+              <h2 id="rec-title" class="text-base font-extrabold text-white">每日推薦主牌（5 碼）</h2>
               <p class="text-xs text-slate-400" id="flame-status-text">以最新一期往前 88 期計算</p>
             </div>
             <div class="flex flex-wrap items-center gap-2">
               <span id="rec-target-date" class="rounded-full bg-cyan-500/20 border border-cyan-400/40 px-2.5 py-0.5 text-xs font-bold text-cyan-200">預測目標日：-</span>
-              <span class="rounded-full bg-amber-500/20 border border-amber-400/40 px-2.5 py-0.5 text-xs font-bold text-amber-300">固定 7 碼</span>
+              <div class="inline-flex rounded-full bg-slate-900/90 border border-amber-400/40 p-0.5 text-xs font-bold">
+                <button type="button" onclick="setTopK(5)" id="btn-topk-5" class="rounded-full px-2.5 py-0.5 transition">5 碼</button>
+                <button type="button" onclick="setTopK(6)" id="btn-topk-6" class="rounded-full px-2.5 py-0.5 transition">6 碼</button>
+                <button type="button" onclick="setTopK(7)" id="btn-topk-7" class="rounded-full px-2.5 py-0.5 transition">7 碼</button>
+              </div>
             </div>
           </div>
           <div id="recommended-balls" class="mt-4 flex flex-wrap items-center gap-3"></div>
@@ -1379,7 +1383,7 @@
       };
     }
 
-    function generatePrediction(allRecords, targetDate, topK = 7, windowSize = 88, applyRotation = true) {
+    function generatePrediction(allRecords, targetDate, topK = 5, windowSize = 88, applyRotation = true) {
       const records88 = allRecords.slice(-Math.min(windowSize, allRecords.length));
       const rotMiss1 = new Set();
       const rotMiss2 = new Set();
@@ -1387,7 +1391,7 @@
         const prev1 = generatePrediction(allRecords.slice(0, -1), allRecords[allRecords.length - 1].draw_date, topK, windowSize, false);
         const lastActual = new Set(allRecords[allRecords.length - 1].numbers);
         const p1Focus = new Set([
-          ...prev1.recommended_numbers.slice(0, 3).map(Number),
+          ...prev1.recommended_numbers.slice(0, 5).map(Number),
           ...prev1.solo_numbers.map(s => s.number)
         ]);
         for (const n of p1Focus) if (!lastActual.has(n)) rotMiss1.add(n);
@@ -1395,7 +1399,7 @@
         const prev2 = generatePrediction(allRecords.slice(0, -2), allRecords[allRecords.length - 2].draw_date, topK, windowSize, false);
         const p2Actual = new Set(allRecords[allRecords.length - 2].numbers);
         const p2Focus = new Set([
-          ...prev2.recommended_numbers.slice(0, 3).map(Number),
+          ...prev2.recommended_numbers.slice(0, 5).map(Number),
           ...prev2.solo_numbers.map(s => s.number)
         ]);
         for (const n of rotMiss1) if (p2Focus.has(n) && !p2Actual.has(n)) rotMiss2.add(n);
@@ -1436,6 +1440,8 @@
       const nCy = norm(cycles.cycleScores), nCo = norm(coScores), nSo = norm(soloMap);
 
       const ranked = [];
+      const recent10Cnt = new Array(40).fill(0);
+      for (const r of records88.slice(-10)) for (const x of r.numbers) recent10Cnt[x]++;
       for (let n = 1; n <= 39; n++) {
         let streak = 0;
         for (let idx = records88.length - 1; idx >= 0; idx--) {
@@ -1443,8 +1449,9 @@
           else break;
         }
         const streakMult = streak === 0 ? 1.0 : (streak === 1 ? 0.92 : (streak === 2 ? 0.65 : 0.25));
-        const rotMult = rotMiss2.has(n) ? 0.55 : (rotMiss1.has(n) ? 0.75 : 1.0);
-        const score = Number((((0.45 * nCy[n] + 0.30 * nCo[n] + 0.25 * nSo[n]) * 100) * streakMult * rotMult).toFixed(1));
+        const rotMult = rotMiss2.has(n) ? 0.48 : (rotMiss1.has(n) ? 0.72 : 1.0);
+        const overheatMult = recent10Cnt[n] >= 4 ? 0.85 : 1.0;
+        const score = Number((((0.45 * nCy[n] + 0.30 * nCo[n] + 0.25 * nSo[n]) * 100) * streakMult * rotMult * overheatMult).toFixed(1));
         ranked.push({
           number: n, formatted: pad2(n), score,
           cyPart: Number((nCy[n] * 45).toFixed(1)),
@@ -1454,7 +1461,28 @@
       }
       ranked.sort((a, b) => b.score - a.score);
 
-      const topRecs = ranked.slice(0, topK);
+      const topRecs = [];
+      const tailUsed = new Array(10).fill(0);
+      const zoneUsed = new Array(4).fill(0);
+      for (const item of ranked) {
+        const t = item.number % 10;
+        const z = Math.min(3, Math.floor(item.number / 10));
+        if (tailUsed[t] < 2 && zoneUsed[z] < 3) {
+          topRecs.push(item);
+          tailUsed[t]++;
+          zoneUsed[z]++;
+          if (topRecs.length === topK) break;
+        }
+      }
+      if (topRecs.length < topK) {
+        const chosenSet = new Set(topRecs.map(x => x.number));
+        for (const item of ranked) {
+          if (!chosenSet.has(item.number)) {
+            topRecs.push(item);
+            if (topRecs.length === topK) break;
+          }
+        }
+      }
       const excludeSet = new Set([...ranked.slice(0, 8).map(r => r.number), ...solo.map(s => s.number)]);
       const recSet = new Set(topRecs.map(r => r.number));
       const soloSet = new Set(solo.map(s => s.number));
@@ -1622,8 +1650,25 @@
       return list;
     }
 
+    const STORAGE_TOPK_KEY = 'daily539_topk_v1';
+    function getTopK() {
+      const v = Number(localStorage.getItem(STORAGE_TOPK_KEY) || '5');
+      return (v === 5 || v === 6 || v === 7) ? v : 5;
+    }
+    function setTopK(k) {
+      localStorage.setItem(STORAGE_TOPK_KEY, String(k));
+      localStorage.removeItem(STORAGE_GRADED_KEY);
+      renderAll();
+    }
     function renderAll() {
-      const topK = 7;
+      const topK = getTopK();
+      document.getElementById('rec-title').textContent = `每日推薦主牌（${topK} 碼）`;
+      for (const k of [5, 6, 7]) {
+        const btn = document.getElementById(`btn-topk-${k}`);
+        if (btn) btn.className = k === topK
+          ? 'rounded-full px-2.5 py-0.5 bg-amber-500 text-slate-950 font-black transition'
+          : 'rounded-full px-2.5 py-0.5 text-amber-200 hover:bg-slate-800 transition';
+      }
       const latest = draws[draws.length - 1];
       const targetDate = nextDrawDate(latest.draw_date);
       const pred = generatePrediction(draws, targetDate, topK, 88);
