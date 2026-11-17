@@ -708,7 +708,7 @@ def main() -> None:
         if (not item.get("predicted_weekday") or item.get("predicted_weekday") == "--" or item.get("predicted_tail") is None) and d_str in date_to_idx:
             i_idx = date_to_idx[d_str]
             if i_idx >= 36:
-                p_back = Rolling88Analyzer(records[:i_idx], window=88).generate_prediction(d_str, top_k=args.top)
+                p_back = Rolling88Analyzer(records[:i_idx], window=88).generate_prediction(d_str, top_k=max(7, args.top))
                 g_back = grade_prediction(p_back, records[i_idx])
                 if not item.get("predicted_weekday") or item.get("predicted_weekday") == "--":
                     item["predicted_weekday"] = g_back["predicted_weekday"]
@@ -720,7 +720,7 @@ def main() -> None:
     for idx in range(start_idx, len(records)):
         actual = records[idx]
         if actual.draw_date not in pred_history:
-            prior_pred = Rolling88Analyzer(records[:idx], window=88).generate_prediction(actual.draw_date, top_k=args.top)
+            prior_pred = Rolling88Analyzer(records[:idx], window=88).generate_prediction(actual.draw_date, top_k=max(7, args.top))
             pred_history[actual.draw_date] = grade_prediction(prior_pred, actual)
 
     sorted_pred_history = [pred_history[d] for d in sorted(pred_history.keys(), reverse=True)]
