@@ -1195,7 +1195,7 @@
           reason: `近${total}期開 ${pos.length} 次，間隔 ${bestGap} 期規律出現 ${bestHits} 次（目前已隔 ${sinceLast} 期）`
         });
       }
-      list.sort((a, b) => b.score - a.score);
+      list.sort((a, b) => (b.score - a.score) || (a.number - b.number));
       return list.slice(0, topN);
     }
 
@@ -1291,7 +1291,7 @@
           nums: numsInTail
         });
       }
-      tailList.sort((a, b) => b.score - a.score);
+      tailList.sort((a, b) => (b.score - a.score) || (a.tail - b.tail));
 
       const bigProb = Number(((bigCnt / nDraws) * 100).toFixed(1));
       const smallProb = Number(((smallCnt / nDraws) * 100).toFixed(1));
@@ -1310,13 +1310,13 @@
 
     function analyzeWeekdayPicks(allRecords, targetDate, streakMap, rankedMap = {}, perWdLimit = 20) {
       const wdNames = ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
-      const dObj = new Date(targetDate + 'T00:00:00+08:00');
-      const jsDay = dObj.getDay();
+      const dObj = new Date(targetDate + 'T00:00:00Z');
+      const jsDay = dObj.getUTCDay();
       const targetWd = jsDay === 0 ? 6 : jsDay - 1;
       const byWd = [[], [], [], [], [], []];
       for (const rec of allRecords) {
-        const dtObj = new Date(rec.draw_date + 'T00:00:00+08:00');
-        const gd = dtObj.getDay();
+        const dtObj = new Date(rec.draw_date + 'T00:00:00Z');
+        const gd = dtObj.getUTCDay();
         const wd = gd === 0 ? 6 : gd - 1;
         if (wd >= 0 && wd < 6) byWd[wd].push(rec);
       }
@@ -1410,7 +1410,7 @@
         if (rotMiss2.has(s.number)) s.score = Number((s.score - 38.0).toFixed(2));
         else if (rotMiss1.has(s.number)) s.score = Number((s.score - 22.0).toFixed(2));
       }
-      soloAll.sort((a, b) => b.score - a.score);
+      soloAll.sort((a, b) => (b.score - a.score) || (a.number - b.number));
       const solo = soloAll.slice(0, 2);
       const cycles = analyzeCycles(records88);
       const coldInfo = analyzeColdestAndIcebreakers(allRecords, windowSize, 5);
@@ -1424,7 +1424,7 @@
       }
       const latestSet = new Set(records88[records88.length - 1].numbers);
       const coScores = new Map();
-      Array.from(pairCounts.entries()).sort((a, b) => b[1] - a[1]).slice(0, 50).forEach(([k, cnt]) => {
+      Array.from(pairCounts.entries()).sort((a, b) => { if (b[1] !== a[1]) return b[1] - a[1]; const [a1, a2] = a[0].split('-').map(Number); const [b1, b2] = b[0].split('-').map(Number); return (a1 - b1) || (a2 - b2); }).slice(0, 50).forEach(([k, cnt]) => {
         const pair = k.split('-').map(Number);
         const hit = pair.filter(x => latestSet.has(x));
         if (hit.length === 1) { const miss = pair.find(x => !latestSet.has(x)); coScores.set(miss, (coScores.get(miss) || 0) + cnt); }
@@ -1459,7 +1459,7 @@
           soPart: Number((nSo[n] * 25).toFixed(1))
         });
       }
-      ranked.sort((a, b) => b.score - a.score);
+      ranked.sort((a, b) => (b.score - a.score) || (a.number - b.number));
 
       const topRecs = [];
       const tailUsed = new Array(10).fill(0);
@@ -1531,7 +1531,7 @@
         ranked_top12: ranked.slice(0, 12),
         solo_numbers: solo,
         tudigong_number: tudigong,
-        tail_and_bs: analyzeTailAndBigSmall(records88, topRecs.map(r => r.number)),
+        tail_and_bs: analyzeTailAndBigSmall(records88, topRecs.slice(0, 5).map(r => r.number)),
         weekday_picks: analyzeWeekdayPicks(allRecords, targetDate, (() => { const m = {}; for (let num=1; num<=39; num++) { let st=0; for (let i=records88.length-1; i>=0; i--) { if (records88[i].numbers.includes(num)) st++; else break; } m[num]=st; } return m; })(), Object.fromEntries(ranked.map(r => [r.number, r.score]))),
         cold_tracking: coldInfo,
         lead_pairs: cycles.leadPairs

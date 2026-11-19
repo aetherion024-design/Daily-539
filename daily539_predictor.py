@@ -200,7 +200,8 @@ class Rolling88Analyzer:
             if freq < 4:
                 continue
             gaps = [positions[i] - positions[i - 1] for i in range(1, len(positions))]
-            best_gap, best_gap_hits = Counter(gaps).most_common(1)[0]
+            gap_cnt = Counter(gaps)
+            best_gap, best_gap_hits = min(gap_cnt.items(), key=lambda kv: (-kv[1], kv[0]))
             st = self.streak_map.get(num, 0)
             if st >= 3:
                 continue  # 連開 3 期以上不以獨支拚連 4
@@ -230,7 +231,7 @@ class Rolling88Analyzer:
                     "reason": f"近{self.window}期開{freq}次，間隔{best_gap}期規律出現{best_gap_hits}次（已隔{draws_since_last}期）",
                 }
             )
-        solo_candidates.sort(key=lambda x: x["score"], reverse=True)  # type: ignore[arg-type]
+        solo_candidates.sort(key=lambda x: (-float(x["score"]), int(x["number"])))  # type: ignore[arg-type]
         return solo_candidates[:top_n]
 
     def analyze_cycle_rules(self, lag_min: int = 3, lag_max: int = 5) -> Dict[str, object]:
@@ -253,7 +254,7 @@ class Rolling88Analyzer:
                 tot = trig_total[a]
                 if tot < 3:
                     continue
-                for b, cnt in follow_cnt[a].most_common(3):
+                for b, cnt in follow_cnt[a].items():
                     prob = cnt / tot
                     lift = prob / self.BASELINE_PROB
                     if cnt >= 2 and lift >= 1.2:
@@ -284,7 +285,7 @@ class Rolling88Analyzer:
 
         recent_3_nums = {x for rec in self.records[-3:] for x in rec.numbers}
         repeating_patterns: List[Dict[str, object]] = []
-        for (a, pair), cnt in lead_pair_hits.most_common(120):
+        for (a, pair), cnt in sorted(lead_pair_hits.items(), key=lambda kv: (-kv[1], kv[0])):
             if cnt >= 4 and lead_total[a] >= 5:
                 rate = cnt / lead_total[a]
                 if a in recent_3_nums:
@@ -366,7 +367,7 @@ class Rolling88Analyzer:
             score = round(tail_counts[t] * 0.9 + tail_recent15[t] * 2.5 + omit_bonus + rec_bonus[t], 1)
             nums = [f"{k:02d}" for k in range(10 if t == 0 else t, 40, 10)]
             tail_list.append({"tail": t, "count": tail_counts[t], "omitted": omitted, "score": score, "nums": nums})
-        tail_list.sort(key=lambda x: x["score"], reverse=True)  # type: ignore[arg-type]
+        tail_list.sort(key=lambda x: (-float(x["score"]), int(x["tail"])))  # type: ignore[arg-type]
 
         return {
             "best_tail": tail_list[0],
@@ -482,7 +483,7 @@ class Rolling88Analyzer:
                 _s["score"] = round(float(_s["score"]) - 38.0, 2)  # type: ignore[arg-type]
             elif _num in rot_miss1:
                 _s["score"] = round(float(_s["score"]) - 22.0, 2)  # type: ignore[arg-type]
-        solo_all.sort(key=lambda x: x["score"], reverse=True)  # type: ignore[arg-type]
+        solo_all.sort(key=lambda x: (-float(x["score"]), int(x["number"])))  # type: ignore[arg-type]
         solo = solo_all[:2]
         cycles = self.analyze_cycle_rules(lag_min=3, lag_max=5)
         cold_info = self.analyze_coldest_and_icebreakers(top_n=5)
@@ -493,7 +494,7 @@ class Rolling88Analyzer:
                 pair_counts[p] += 1
         latest_set = set(self.records[-1].numbers)
         co_scores: Dict[int, float] = defaultdict(float)
-        for pair, cnt in pair_counts.most_common(50):
+        for pair, cnt in sorted(pair_counts.items(), key=lambda kv: (-kv[1], kv[0]))[:50]:
             hit = latest_set.intersection(pair)
             if len(hit) == 1:
                 miss = next(x for x in pair if x not in latest_set)
@@ -531,7 +532,7 @@ class Rolling88Analyzer:
                     "is_flame": is_flame,
                 }
             )
-        ranked.sort(key=lambda x: x["score"], reverse=True)  # type: ignore[arg-type]
+        ranked.sort(key=lambda x: (-float(x["score"]), int(x["number"])))  # type: ignore[arg-type]
 
         # 結構分散選牌：同尾最多 2 顆、同十位區間最多 3 顆
         top_recs = []
@@ -608,7 +609,7 @@ class Rolling88Analyzer:
             "ai_flame_numbers": flame_numbers,
             "solo_numbers": solo,
             "tudigong_number": tudigong,
-            "tail_and_bs": self.analyze_tail_and_big_small([r["number"] for r in top_recs]),
+            "tail_and_bs": self.analyze_tail_and_big_small([r["number"] for r in top_recs[:5]]),
             "cold_tracking": cold_info,
             "weekday_picks": self.analyze_weekday_picks(target_date, ranked_scores={int(r["number"]): float(r["score"]) for r in ranked}),
             "cycle_patterns": {
