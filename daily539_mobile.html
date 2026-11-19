@@ -399,7 +399,6 @@
                   <div id="cycle-picker-grid" class="grid grid-cols-7 gap-1.5"></div>
                 </div>
               </div>
-              <button id="btn-cycle-clear" type="button" class="rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs font-bold text-slate-200 hover:border-rose-400/60 hover:text-rose-200 transition">清除</button>
               <button id="btn-run-cycle" type="button" class="rounded-lg bg-amber-400 px-4 py-1.5 text-xs font-extrabold text-slate-950 hover:bg-amber-300 transition">重新分析</button>
             </div>
           </div>
@@ -1968,7 +1967,7 @@
       latestExportJson = { ...pred, recent_graded_history: gradedHistory.slice(0, 30) };
     }
 
-    let selectedCycleNums = [14, 27, 30];
+    let selectedCycleNums = [];
 
     function renderCyclePickerUI() {
       const selEl = document.getElementById('cycle-selected-balls');
@@ -2137,7 +2136,6 @@
     });
 
     document.getElementById('btn-run-cycle').addEventListener('click', () => renderCycleQuery(true));
-    document.getElementById('btn-cycle-clear').addEventListener('click', clearCycleNums);
     document.getElementById('btn-cycle-clear-inner').addEventListener('click', (e) => {
       e.stopPropagation();
       clearCycleNums();
