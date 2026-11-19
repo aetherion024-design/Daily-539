@@ -348,16 +348,56 @@
             <h2 class="text-base font-extrabold text-white">88 期內「隔 3～5 期」拖牌規律查詢</h2>
             <p class="text-xs text-slate-400">統計指定號碼開出後隔 3、4、5 期重複開出哪些號碼</p>
           </div>
-          <div class="flex flex-wrap items-center gap-2">
-            <div>
-              <label for="window-input" class="block text-[11px] font-semibold text-slate-400">基準期數</label>
-              <input id="window-input" type="number" min="30" max="582" value="88" class="w-20 rounded-lg border border-slate-700 bg-slate-800 px-2.5 py-1.5 text-xs font-bold text-white" />
+          <div class="flex flex-col items-start sm:items-end gap-2 w-full sm:w-auto">
+            <div id="cycle-selected-balls" class="flex flex-wrap items-center gap-1.5 min-h-[32px]"></div>
+            <div class="flex flex-wrap items-end gap-2 relative">
+              <div>
+                <label for="window-input" class="block text-[11px] font-semibold text-slate-400 mb-1">基準期數</label>
+                <select id="window-input" class="rounded-lg border border-slate-700 bg-slate-800 px-2.5 py-1.5 text-xs font-bold text-white">
+                  <option value="10">近 10 期</option>
+                  <option value="20">近 20 期</option>
+                  <option value="30">近 30 期</option>
+                  <option value="40">近 40 期</option>
+                  <option value="50">近 50 期</option>
+                  <option value="60">近 60 期</option>
+                  <option value="70">近 70 期</option>
+                  <option value="80">近 80 期</option>
+                  <option value="88" selected>近 88 期（預設）</option>
+                  <option value="90">近 90 期</option>
+                  <option value="100">近 100 期</option>
+                  <option value="110">近 110 期</option>
+                  <option value="120">近 120 期</option>
+                  <option value="130">近 130 期</option>
+                  <option value="140">近 140 期</option>
+                  <option value="150">近 150 期</option>
+                  <option value="160">近 160 期</option>
+                  <option value="170">近 170 期</option>
+                  <option value="180">近 180 期</option>
+                  <option value="190">近 190 期</option>
+                  <option value="200">近 200 期</option>
+                  <option value="210">近 210 期</option>
+                  <option value="220">近 220 期</option>
+                  <option value="230">近 230 期</option>
+                  <option value="240">近 240 期</option>
+                  <option value="9999">全部期數</option>
+                </select>
+              </div>
+              <div class="relative" id="cycle-ball-picker">
+                <label class="block text-[11px] font-semibold text-slate-400 mb-1">查詢號碼（1～6 顆）</label>
+                <button id="btn-cycle-picker-toggle" type="button" class="flex items-center justify-between gap-2 min-w-[165px] rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs font-bold text-white hover:border-amber-400/60 transition">
+                  <span id="cycle-picker-label">已選 3 / 6 顆</span>
+                  <span class="text-slate-400 text-[10px]">▼</span>
+                </button>
+                <div id="cycle-picker-panel" class="hidden absolute right-0 sm:right-0 left-0 sm:left-auto z-40 mt-1.5 w-[290px] sm:w-[330px] rounded-xl border border-slate-700 bg-[#111827] p-3 shadow-2xl">
+                  <div class="flex items-center justify-between mb-2 pb-1.5 border-b border-slate-800">
+                    <span class="text-[11px] font-bold text-amber-300">點選號碼球（最少 1 顆、最多 6 顆）</span>
+                    <button id="btn-cycle-picker-close" type="button" class="rounded bg-slate-800 px-2 py-0.5 text-[11px] font-bold text-slate-200 hover:bg-slate-700">完成</button>
+                  </div>
+                  <div id="cycle-picker-grid" class="grid grid-cols-7 gap-1.5"></div>
+                </div>
+              </div>
+              <button id="btn-run-cycle" type="button" class="rounded-lg bg-amber-400 px-4 py-1.5 text-xs font-extrabold text-slate-950 hover:bg-amber-300 transition">重新分析</button>
             </div>
-            <div>
-              <label for="trigger-input" class="block text-[11px] font-semibold text-slate-400">查詢號碼（空白分隔）</label>
-              <input id="trigger-input" type="text" value="14 27 30" class="w-44 rounded-lg border border-slate-700 bg-slate-800 px-2.5 py-1.5 text-xs font-bold text-white" />
-            </div>
-            <button id="btn-run-cycle" class="mt-4 rounded-lg bg-amber-400 px-4 py-1.5 text-xs font-extrabold text-slate-950 hover:bg-amber-300 transition">重新分析</button>
           </div>
         </div>
         <div id="cycle-lag-grid" class="grid grid-cols-1 gap-4 md:grid-cols-3"></div>
@@ -1924,10 +1964,74 @@
       latestExportJson = { ...pred, recent_graded_history: gradedHistory.slice(0, 30) };
     }
 
+    let selectedCycleNums = [14, 27, 30];
+
+    function renderCyclePickerUI() {
+      const selEl = document.getElementById('cycle-selected-balls');
+      const lblEl = document.getElementById('cycle-picker-label');
+      const gridEl = document.getElementById('cycle-picker-grid');
+      if (lblEl) lblEl.textContent = `已選 ${selectedCycleNums.length} / 6 顆`;
+      if (selEl) {
+        selEl.innerHTML = selectedCycleNums.map(n => `
+          <button type="button" data-remove-cycle="${n}" title="點擊移除 ${pad2(n)}" class="group relative inline-flex items-center focus:outline-none">
+            <span class="lotto-ball lotto-ball-sm ${ballZoneClass(n)}">${pad2(n)}</span>
+            <span class="ml-0.5 text-[10px] font-bold text-slate-400 group-hover:text-rose-400">×</span>
+          </button>
+        `).join('');
+        selEl.querySelectorAll('[data-remove-cycle]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const num = Number(btn.getAttribute('data-remove-cycle'));
+            toggleCycleNum(num);
+          });
+        });
+      }
+      if (gridEl) {
+        const selSet = new Set(selectedCycleNums);
+        const items = [];
+        for (let n = 1; n <= 39; n++) {
+          const isSel = selSet.has(n);
+          items.push(`
+            <button type="button" data-pick-cycle="${n}" class="flex items-center justify-center rounded-lg p-1 transition ${isSel ? 'bg-amber-500/20 ring-2 ring-amber-400' : 'opacity-70 hover:opacity-100 hover:bg-slate-800'}">
+              <span class="lotto-ball lotto-ball-sm ${ballZoneClass(n)}">${pad2(n)}</span>
+            </button>
+          `);
+        }
+        gridEl.innerHTML = items.join('');
+        gridEl.querySelectorAll('[data-pick-cycle]').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const num = Number(btn.getAttribute('data-pick-cycle'));
+            toggleCycleNum(num);
+          });
+        });
+      }
+    }
+
+    function toggleCycleNum(num) {
+      const idx = selectedCycleNums.indexOf(num);
+      if (idx >= 0) {
+        if (selectedCycleNums.length <= 1) {
+          showToast('最少須保留 1 顆查詢號碼');
+          return;
+        }
+        selectedCycleNums.splice(idx, 1);
+      } else {
+        if (selectedCycleNums.length >= 6) {
+          showToast('最多只能選擇 6 顆查詢號碼');
+          return;
+        }
+        selectedCycleNums.push(num);
+        selectedCycleNums.sort((a, b) => a - b);
+      }
+      renderCyclePickerUI();
+      renderCycleQuery();
+    }
+
     function renderCycleQuery() {
-      const winSize = Math.max(30, Number(document.getElementById('window-input').value) || 88);
+      renderCyclePickerUI();
+      const winSize = Math.max(10, Number(document.getElementById('window-input').value) || 88);
       const records88 = draws.slice(-Math.min(winSize, draws.length));
-      const trigs = document.getElementById('trigger-input').value.trim().split(/[\s,，]+/).map(Number).filter(n => n >= 1 && n <= 39);
+      const trigs = selectedCycleNums.slice();
       const grid = document.getElementById('cycle-lag-grid');
       grid.innerHTML = trigs.map(a => {
         const rows = [];
@@ -2018,6 +2122,21 @@
     });
 
     document.getElementById('btn-run-cycle').addEventListener('click', renderCycleQuery);
+    document.getElementById('window-input').addEventListener('change', renderCycleQuery);
+    document.getElementById('btn-cycle-picker-toggle').addEventListener('click', (e) => {
+      e.stopPropagation();
+      document.getElementById('cycle-picker-panel').classList.toggle('hidden');
+    });
+    document.getElementById('btn-cycle-picker-close').addEventListener('click', () => {
+      document.getElementById('cycle-picker-panel').classList.add('hidden');
+    });
+    document.addEventListener('click', (e) => {
+      const picker = document.getElementById('cycle-ball-picker');
+      const panel = document.getElementById('cycle-picker-panel');
+      if (picker && panel && !picker.contains(e.target)) {
+        panel.classList.add('hidden');
+      }
+    });
     ['history-year', 'history-month', 'history-weekday', 'history-number'].forEach(id => {
       document.getElementById(id)?.addEventListener('change', renderHistoryTable);
     });
